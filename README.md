@@ -1,4 +1,4 @@
-# PoC —Registro de ordeños sin duplicados ni escrituras parciales
+# PoC — Registro de ordeños sin duplicados ni escrituras parciales
 
 Prueba de concepto del **Sistema de Gestión de Ganadería Lechera**
 (Laboratorio de Software IS873 · Universidad Tecnológica de Pereira).
