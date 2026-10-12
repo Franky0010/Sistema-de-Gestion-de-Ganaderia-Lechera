@@ -185,3 +185,50 @@ def test_animal_inexistente_devuelve_404_sin_escribir(entorno):
 
     assert asyncio.run(run()).status_code == 404
     assert contar(entorno.SessionLocal, Ordeno) == 0
+
+@pytest.mark.parametrize("arete", ["", "   ", "\t\n"])
+def test_arete_vacio_se_rechaza_sin_persistir(entorno, arete):
+    inicial = contar(entorno.SessionLocal, Animal)
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as c:
+            return await c.post("/animales", json={"arete": arete})
+    assert asyncio.run(run()).status_code == 422
+    assert contar(entorno.SessionLocal, Animal) == inicial
+
+
+def test_arete_normalizado_conserva_unicidad(entorno):
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as c:
+            nuevo = await c.post("/animales", json={"arete": "  v-002  "})
+            repetido = await c.post("/animales", json={"arete": "V-002"})
+            return nuevo, repetido
+    nuevo, repetido = asyncio.run(run())
+    assert nuevo.status_code == 201
+    assert nuevo.json()["arete"] == "V-002"
+    assert repetido.status_code == 409
+    assert contar(entorno.SessionLocal, Animal) == 2
+
+
+@pytest.mark.parametrize("cantidad", ["1E+10000", "92233720368547758.08", "1E-10000"])
+@pytest.mark.parametrize("campo", ["litros_producidos", "litros_descartados"])
+def test_cantidades_extremas_devuelven_422_sin_escribir(entorno, cantidad, campo):
+    async def run():
+        cuerpo = payload(entorno.animal_id)
+        cuerpo[campo] = cantidad
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://t") as c:
+            return await c.post("/ordenos", json=cuerpo, headers=HEADERS)
+    assert asyncio.run(run()).status_code == 422
+    assert contar(entorno.SessionLocal, Ordeno) == 0
+    assert contar(entorno.SessionLocal, Auditoria) == 0
+
+
+def test_limite_sqlite_se_persiste_sin_perder_precision(entorno):
+    with entorno.SessionLocal() as s:
+        o = service.registrar_ordeno(
+            s, animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="tarde",
+            litros_producidos=Decimal("92233720368547758.07"),
+            litros_descartados=Decimal("0"), usuario="operario01",
+        )
+        s.expire_all()
+        assert s.get(Ordeno, o.id).centilitros_producidos == 9223372036854775807
+    assert contar(entorno.SessionLocal, Auditoria) == 1

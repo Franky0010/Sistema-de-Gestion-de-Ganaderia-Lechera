@@ -5,7 +5,7 @@ transacción, y los duplicados los detiene la restricción única de la base de 
 (no una consulta previa, que fallaría bajo concurrencia).
 """
 import json
-from decimal import Decimal
+from decimal import Decimal, DecimalException, localcontext
 
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
@@ -13,6 +13,8 @@ from sqlalchemy.orm import Session
 from .models import Animal, Auditoria, Ordeno
 
 TURNOS = ("mañana", "tarde")
+# Límite técnico del INTEGER de SQLite (64 bits con signo), expresado en litros.
+MAX_LITROS = Decimal("92233720368547758.07")
 
 
 class ErrorDeValidacion(Exception):
@@ -37,9 +39,16 @@ def a_centilitros(litros: Decimal, campo: str) -> int:
         raise ErrorDeValidacion(f"{campo} debe ser un número finito")
     if litros < 0:
         raise ErrorDeValidacion(f"{campo} no puede ser negativo")
-    if litros != litros.quantize(Decimal("0.01")):
-        raise ErrorDeValidacion(f"{campo} admite máximo dos decimales")
-    return int(litros * 100)
+    if litros > MAX_LITROS:
+        raise ErrorDeValidacion(f"{campo} supera el límite de almacenamiento")
+    try:
+        with localcontext() as contexto:
+            contexto.prec = 28
+            if litros != litros.quantize(Decimal("0.01")):
+                raise ErrorDeValidacion(f"{campo} admite máximo dos decimales")
+            return int(litros * 100)
+    except DecimalException as exc:
+        raise ErrorDeValidacion(f"{campo} no puede representarse en centilitros") from exc
 
 
 def _insertar_auditoria(session: Session, ordeno: Ordeno, usuario: str) -> None:

@@ -7,7 +7,7 @@ from decimal import Decimal
 from typing import Literal, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -37,6 +37,14 @@ class AnimalIn(BaseModel):
     arete: str = Field(min_length=1)
     nombre: Optional[str] = None
 
+    @field_validator("arete")
+    @classmethod
+    def normalizar_arete(cls, valor: str) -> str:
+        valor = valor.strip().upper()
+        if not valor:
+            raise ValueError("el arete no puede estar vacío")
+        return valor
+
 
 class OrdenoIn(BaseModel):
     animal_id: int
@@ -49,7 +57,7 @@ class OrdenoIn(BaseModel):
 
 @app.post("/animales", status_code=201)
 def crear_animal(datos: AnimalIn, session: Session = Depends(get_session)):
-    arete = datos.arete.strip().upper()  # normalización de RF02
+    arete = datos.arete  # normalizado y validado por AnimalIn
     animal = Animal(arete=arete, nombre=datos.nombre)
     session.add(animal)
     try:
