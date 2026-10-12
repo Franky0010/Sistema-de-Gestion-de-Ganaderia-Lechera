@@ -60,7 +60,7 @@ poc-ganaderia-lechera/
 Requisitos: Python 3.10 o superior.
 
 ```bash
-git clone <URL-DEL-REPOSITORIO>
+git clone <[URL-DEL-REPOSITORIO](https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera.git)>
 cd poc-ganaderia-lechera
 
 python -m venv .venv
