@@ -27,11 +27,11 @@ Aplicación web propuesta para centralizar la información de los animales, regi
 
 | Documento | Contenido |
 |---|---|
-| [Planteamiento y diseño (.docx)](docs/planteamiento-y-diseno.docx) | Problema, objetivos, RF01–RF13, RNF01–RNF10, casos de uso, arquitectura, modelo de datos y mockups. |
-| [Product Backlog (.docx)](docs/product-backlog.docx) | 17 historias funcionales y 5 historias técnicas, criterios de aceptación, prioridades, estimaciones, dependencias y propuesta de sprints. |
+| [Planteamiento y diseño](docs/planteamiento-y-diseno.md) | Problema, objetivos, RF01–RF13, RNF01–RNF10, casos de uso, arquitectura, modelo de datos y mockups. |
+| [Product Backlog](docs/product-backlog.md) | 17 historias funcionales y 5 historias técnicas, criterios de aceptación, prioridades, estimaciones, dependencias y propuesta de sprints. |
 | [Prueba de concepto](docs/POC.md) | Riesgo técnico evaluado, procedimiento, resultados y limitaciones de concurrencia y atomicidad. |
 
-Los archivos Word se conservan tal como fueron entregados. El planteamiento todavía describe la ejecución del PoC como pendiente; el código y su informe reflejan el avance posterior. Las estimaciones y la distribución de sprints del backlog son propuestas sujetas a refinamiento.
+Las versiones Markdown se pueden leer directamente en GitHub e incluyen índices navegables y las imágenes del diseño. Los archivos Word se conservan tal como fueron entregados y están enlazados al inicio de cada documento para su descarga. El planteamiento todavía describe la ejecución del PoC como pendiente; el código y su informe reflejan el avance posterior. Las estimaciones y la distribución de sprints del backlog son propuestas sujetas a refinamiento.
 
 ## Problema y objetivo
 
@@ -129,8 +129,11 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 │   ├── models.py         # Animal, Ordeno y Auditoria
 │   └── service.py        # Validaciones y transacción de ordeño/auditoría
 ├── docs/
+│   ├── assets/planteamiento-y-diseno/  # Diagramas y mockups
 │   ├── POC.md
+│   ├── planteamiento-y-diseno.md
 │   ├── planteamiento-y-diseno.docx
+│   ├── product-backlog.md
 │   └── product-backlog.docx
 ├── tests/
 │   ├── __init__.py
