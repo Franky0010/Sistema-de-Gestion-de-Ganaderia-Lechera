@@ -4,7 +4,8 @@
 
 **SISTEMA DE GESTIÓN DE GANADERÍA LECHERA**
 
-**Versión:** 1.0  
+**Versión:** 1.0
+
 **Fecha:** 13/10/2026
 
 **Elaborado por:**
