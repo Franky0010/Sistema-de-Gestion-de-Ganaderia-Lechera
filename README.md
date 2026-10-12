@@ -141,8 +141,6 @@ tests/test_poc.py::test_animal_inexistente_devuelve_404_sin_escribir PASSED
 
 ## 7. Conclusión
 
-## 7. Conclusión
-
 La PoC confirma que el diseño propuesto resuelve el riesgo planteado en este escenario
 reducido. La restricción única `UNIQUE (animal_id, fecha, turno)` evitó el duplicado en
 las 50 repeticiones de solicitudes simultáneas (siempre un `201` y un `409`) y, con 8
