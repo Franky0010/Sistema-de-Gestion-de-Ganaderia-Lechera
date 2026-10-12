@@ -60,8 +60,8 @@ poc-ganaderia-lechera/
 Requisitos: Python 3.10 o superior.
 
 ```bash
-git clone <[URL-DEL-REPOSITORIO](https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera.git)>
-cd poc-ganaderia-lechera
+git clone https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera.git
+cd Sistema-de-Gestion-de-Ganaderia-Lechera
 
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
@@ -99,7 +99,7 @@ curl -X POST localhost:8000/ordenos -H "Content-Type: application/json" \
 |---|---|
 | Fecha de ejecución | 11/10/2026 |
 | Sistema operativo / Python | Windows (win32) · Python 3.13.2 |
-| Versiones principales | pytest 9.1.1 · anyio 4.15.1 · (completar con `pip freeze`: fastapi, sqlalchemy, httpx, uvicorn) |
+| Versiones principales | pytest 9.1.1 · anyio 4.15.1 · FastAPI 0.143.0 · SQLAlchemy 2.1.4 · httpx 0.28.1 · uvicorn 0.54.0 |
 | Resultado de `pytest -v -s` | `12 passed, 0 failed` en 3.29 s |
 | Prueba 2a: repeticiones distintas de `[201, 409]` | `0 de 50` |
 | Prueba 2b: resultado de los 8 hilos | 1 `ok` y 7 `duplicado` |
@@ -164,3 +164,15 @@ carga y de integración del MVP, que se harán en el Sprint 4.
 - Casos de uso: CU-02 (Registro y control de ordeños).
 - Reglas de negocio: RN02, RN03, RN04.
 - Backlog: PB-07, PB-08, HT-02.
+
+## 9. Validaciones y reproducción de esta revisión
+
+Se rechazan aretes vacíos después de quitar espacios y normalizar mayúsculas.
+Las cantidades que exceden 92233720368547758.07 L reciben HTTP 422 sin persistir
+ordeños ni auditorías: es el límite técnico del entero de 64 bits de SQLite en
+centilitros, no una regla sobre la producción esperada de una vaca.
+Los errores de representación decimal también se traducen a una validación 422.
+
+Las versiones directas y transitivas utilizadas por esta revisión están fijadas
+en requirements.txt. La sección 5 conserva el resultado de la ejecución original;
+las pruebas de regresión añadidas se ejecutan con el mismo comando pytest.
