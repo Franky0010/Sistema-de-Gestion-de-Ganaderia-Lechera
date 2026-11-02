@@ -1,7 +1,17 @@
 # Propuesta de contrato API — Sprint 1
 
 **Estado: propuesta para revisión del equipo, no implementada por el PoC.**
-Frontend: Juanloaiza25. Backend de acceso/usuarios: compañero 1. Backend de ganado/auditoría: compañero 2. Vinculado a PB-01, PB-02, PB-03, PB-04, PB-11, HT-01 y HT-02.
+Vinculado a PB-01, PB-02, PB-03, PB-04, PB-11, HT-01 y HT-02.
+
+## Responsables según las subtareas de GitHub
+
+| Responsable | Alcance | Subtareas |
+|---|---|---|
+| Juan Diego Loaiza (@Juanloaiza25) | Frontend de acceso, usuarios, navegación por rol, registro de animales y cambios de estado | #26, #28, #30, #32, #34 |
+| Franky Marin (@Franky0010) | Backend de sesión, usuarios, permisos por rol y seguridad; integridad y auditoría de usuarios | #27, #29, #31, #36, #38 |
+| Juan Manuel Alvarez (@juanalvarez6) | Backend de registro de animales, estados e historial; base compartida de integridad y auditoría | #33, #35, #37 |
+
+Franky integra la auditoría de usuarios con la base compartida a cargo de Juan Manuel. Este reparto refleja las asignaciones consultadas en GitHub el 2 de noviembre de 2026.
 
 ## Decisiones comunes
 
@@ -14,7 +24,7 @@ Frontend: Juanloaiza25. Backend de acceso/usuarios: compañero 1. Backend de gan
 - El servidor valida todos los datos y permisos. No aceptar usuario/responsable/fecha de auditoría enviados por la UI. No borrar datos históricos.
 - No hay reintentos automáticos de escrituras. Ante pérdida de respuesta, consultar antes de repetir. La unicidad debe ser transaccional.
 
-## Sesión y CSRF — compañero 1
+## Sesión y CSRF — Franky Marin (@Franky0010)
 
 Cookie de sesión opaca `sesion`, HttpOnly, Secure en HTTPS, SameSite=Lax, Path=/. No devolver el token de sesión en JSON ni almacenarlo en localStorage. Timeout de 30 minutos de inactividad en servidor; invalidar al cerrar sesión o desactivar usuario. Verificar rol y estado vigente en cada petición. Respuestas de sesión y CSRF con `Cache-Control: no-store`.
 
@@ -31,7 +41,7 @@ Usuario público: `{ "id": 1, "nombre": "Ana Pérez", "email": "ana@finca.co", "
 
 Error de login incorrecto: 401 `CREDENCIALES_INVALIDAS`. Cuenta inactiva: 403 `CUENTA_INACTIVA` **solo después de verificar contraseña**; no revelar si existe una cuenta mediante una contraseña incorrecta. Sesión caducada/revocada: 401 `SESION_EXPIRADA`. El cliente limpia datos de pantallas privadas y vuelve al acceso. Prohibido registrar contraseñas, cookies o tokens en logs.
 
-## Usuarios — compañero 1
+## Usuarios — Franky Marin (@Franky0010)
 
 Todas estas rutas requieren Administrador; otros roles reciben 403.
 
@@ -44,7 +54,7 @@ Todas estas rutas requieren Administrador; otros roles reciben 403.
 
 Correo normalizado trim + minúsculas, único incluso para cuentas inactivas. Nombre requerido (máx. 120), email máx. 254, contraseña propuesta 8..128 caracteres sin recortar espacios (política pendiente de aprobación). Rol de la lista permitida. La UI no ofrece cambiar contraseña en esta fase; no enviar un campo vacío para simularlo. Desactivar es lógico, revoca sesiones y conserva autoría histórica. La UI permite desactivación con confirmación y no ofrece reactivar cuentas todavía.
 
-## Animales y estados — compañero 2
+## Animales y estados — Juan Manuel Alvarez (@juanalvarez6)
 
 | Método/ruta | Acceso | Entrada y resultado |
 |---|---|---|
@@ -110,8 +120,8 @@ Implementar handlers de FastAPI para normalizar errores de Pydantic y HTTPExcept
 
 ## Orden de implementación y comprobación
 
-1. Ambos backend revisan este documento. Acceso implementa CSRF/sesión/login/logout; ganado acuerda esquemas y auditoría.
-2. Acceso implementa usuarios y middleware/dependencias de permisos; ganado implementa listado, registro y estados versionados.
+1. Franky y Juan Manuel revisan este documento. Franky implementa CSRF/sesión/login/logout; Juan Manuel prepara los esquemas y la base compartida de auditoría.
+2. Franky implementa usuarios, su auditoría y middleware/dependencias de permisos; Juan Manuel implementa listado, registro y estados versionados de animales.
 3. Pruebas de autorización en cada endpoint, CSRF inválido, cuentas inactivas, expiración, duplicados concurrentes, rollback y conflictos de estado.
 4. Frontend ejecuta `npm run dev` (API real) y verifica los cinco flujos. `npm run demo` solo usa datos sintéticos en memoria y no hace llamadas al backend.
 5. Revisar los criterios originales antes de cerrar cada historia. Aclarar las dependencias PB-01/PB-03 → PB-12 del backlog; esta propuesta no las corrige silenciosamente.
