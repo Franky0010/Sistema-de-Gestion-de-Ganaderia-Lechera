@@ -4,7 +4,9 @@ Proyecto académico de **IS873 — Laboratorio de Software**, Universidad Tecnol
 
 Aplicación web propuesta para centralizar la información de los animales, registrar ordeños y facilitar el seguimiento de la producción de una finca lechera. Busca reemplazar la consolidación manual de cuadernos y hojas de cálculo por registros consistentes, permisos por rol, historial e indicadores verificables.
 
-**Estado actual:** el repositorio contiene una prueba de concepto ejecutable de registro de ordeños con control de duplicados, validación de cantidades y auditoría transaccional. La interfaz web, autenticación y demás módulos del MVP están planificados; todavía no están implementados.
+**Estado actual:** el repositorio contiene el PoC de ordeños y un frontend inicial del sprint 1 (acceso, usuarios, permisos visuales, animales y estados), con demo aislada y adaptador de API. La autenticación y los endpoints completos del sprint 1 siguen pendientes de implementación en backend. El frontend no acredita por sí solo esos requisitos del MVP.
+
+Para probar la interfaz: `cd frontend`, `npm ci`, `npm run demo`; abrir `http://127.0.0.1:5173/ui/`. Ver [guía del frontend](frontend/README.md) y [propuesta de contrato API para el equipo](docs/contrato-api-sprint1.md).
 
 ## Índice
 
@@ -105,7 +107,7 @@ El diseño propone una aplicación cliente-servidor con API REST y persistencia 
 
 | Componente | Tecnología | Situación |
 |---|---|---|
-| Interfaz | HTML, Tailwind CSS y JavaScript | Propuesta; sin frontend implementado. |
+| Interfaz | HTML, Tailwind CSS y JavaScript | Sprint 1 con demo local y adaptador API; integración real pendiente. |
 | API | Python y FastAPI | Implementada de forma mínima para el PoC. |
 | Validación | Pydantic y servicios de negocio | Implementación parcial. |
 | Persistencia | SQLAlchemy y SQLite | Implementada en el PoC. |
@@ -146,7 +148,7 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 
 ## Instalación y ejecución
 
-Estas instrucciones ejecutan el backend del PoC. No existe todavía una pantalla de acceso ni interfaz web del MVP.
+Estas instrucciones ejecutan el backend del PoC. Para la pantalla de acceso y los formularios nuevos, seguir la [guía del frontend](frontend/README.md); las APIs de autenticación y gestión todavía deben implementarse.
 
 ### Requisitos
 

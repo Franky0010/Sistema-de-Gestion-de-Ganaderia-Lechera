@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-02T12:00:00Z",
+  "title": "Design System: Ganadería lechera",
+  "extensions": {
+    "shadows": [
+      {"name":"notice","value":"0 8px 32px #153a2926","purpose":"Notificaciones de resultado."},
+      {"name":"dialog","value":"0 20px 70px #12332633","purpose":"Confirmación de desactivación."}
+    ],
+    "motion": [
+      {"name":"press","value":"transform 140ms cubic-bezier(.23,1,.32,1)","purpose":"Respuesta discreta al pulsar botones; desactivada con movimiento reducido."}
+    ],
+    "breakpoints": [{"name":"compact-desktop","value":"1100px"},{"name":"mobile","value":"720px"}]
+  },
+  "components": [
+    {
+      "name":"Acción principal",
+      "kind":"button",
+      "refersTo":"button-primary",
+      "description":"Acción de guardado o alta de un registro.",
+      "html":"<button class=\"primary\">Guardar animal</button>",
+      "css":".primary{font:600 14px 'Segoe UI',system-ui,sans-serif;min-height:43px;padding:10px 17px;background:#174b3d;color:#fff;border:1px solid transparent;border-radius:8px;cursor:pointer}.primary:focus-visible{outline:3px solid #39856b;outline-offset:3px}.primary:disabled{opacity:.58;cursor:not-allowed}"
+    }
+  ],
+  "narrative": {
+    "northStar":"Interfaz clara con verde bosque",
+    "overview":"Registro operativo del hato con acciones reconocibles, formularios legibles y estados explícitos.",
+    "keyCharacteristics":["Superficies claras","Acciones en verde bosque","Tablas que se adaptan a móvil","Datos de demostración identificados"],
+    "rules":[{"name":"Estado explícito","body":"El color acompaña siempre un nombre o mensaje.","section":"colors"}],
+    "dos":["Conservar valores ante errores corregibles.","Mantener visible el foco de teclado."],
+    "donts":["No confundir simulador con backend integrado.","No inventar métricas para decorar la pantalla."]
+  }
+}
