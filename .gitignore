@@ -4,3 +4,13 @@ __pycache__/
 *.db
 *.db-wal
 *.db-shm
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+frontend/.impeccable/
+.impeccable/review/
+.impeccable/build/
+.impeccable/mocks/
+.env
+.env.local

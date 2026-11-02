@@ -1,0 +1,154 @@
+import { test, expect } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
+const captures='../.impeccable/review';
+mkdirSync(captures,{recursive:true});
+async function login(page,role='Administrador') {
+  await page.goto('./');
+  await page.getByRole('button',{name:role,exact:true}).click();
+  await page.getByRole('button',{name:'Iniciar sesión',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'El hato, en orden'})).toBeVisible();
+}
+test('login: errores, contraseña visible, cuenta inactiva y logout',async({page})=>{
+  await page.goto('./');
+  await expect(page.getByRole('heading',{name:'Bienvenido de nuevo'})).toBeVisible();
+  await page.screenshot({path:`${captures}/login-desktop.png`,fullPage:true});
+  await page.getByRole('button',{name:'Iniciar sesión'}).click();
+  await expect(page.locator('#email')).toBeFocused();
+  await page.locator('#email').fill('inactivo@demo.local');
+  await page.locator('#password').fill('Demo12345');
+  await page.getByRole('button',{name:'Mostrar',exact:true}).click();
+  await expect(page.locator('#password')).toHaveAttribute('type','text');
+  await page.getByRole('button',{name:'Iniciar sesión'}).click();
+  await expect(page.getByRole('alert')).toContainText('inactiva');
+  await page.getByRole('button',{name:'Administrador',exact:true}).click();
+  await page.getByRole('button',{name:'Iniciar sesión'}).click();
+  await page.getByRole('button',{name:'Salir',exact:true}).click();
+  await expect(page.locator('#password')).toHaveValue('');
+  await expect(page.locator('#main')).not.toContainText('V-001');
+});
+test('animales: registro, duplicado preserva datos y cambio de estado',async({page})=>{
+  await login(page);
+  await page.screenshot({path:`${captures}/desktop.png`,fullPage:true});
+  await page.getByRole('link',{name:'Registrar animal',exact:true}).click();
+  await page.screenshot({path:`${captures}/animal-form.png`,fullPage:true});
+  await page.getByLabel('Arete',{exact:false}).fill('V-001');
+  await page.getByLabel('Nombre (opcional)').fill('Nueva');
+  await page.getByLabel('Raza',{exact:false}).fill('Jersey');
+  await page.getByLabel('Procedencia',{exact:false}).fill('Compra');
+  await page.getByLabel('Fecha de nacimiento',{exact:false}).fill('2022-01-01');
+  await page.getByLabel('Estado inicial',{exact:false}).selectOption('seco');
+  await page.getByRole('button',{name:'Guardar animal',exact:true}).click();
+  await expect(page.getByRole('alert')).toContainText('registrado');
+  await expect(page.getByLabel('Nombre (opcional)')).toHaveValue('Nueva');
+  await page.getByLabel('Arete',{exact:false}).fill('V-099');
+  await page.getByRole('button',{name:'Guardar animal',exact:true}).click();
+  await expect(page.getByText('V-099',{exact:true})).toBeVisible();
+  await page.getByRole('link',{name:'Cambiar estado de V-001',exact:true}).click();
+  await page.getByLabel('Estado productivo',{exact:false}).selectOption('seco');
+  await page.getByLabel('Motivo del cambio',{exact:false}).fill('Fin del período productivo');
+  await page.screenshot({path:`${captures}/state-form.png`,fullPage:true});
+  await page.getByRole('button',{name:'Guardar cambio de estado'}).click();
+  await expect(page.getByRole('row').filter({hasText:'V-001'})).toContainText('Seco');
+});
+test('usuarios: crear, editar, desactivar y conservar cuenta histórica',async({page})=>{
+  await login(page);
+  await page.getByRole('link',{name:'Usuarios',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Personas y permisos'})).toBeVisible();
+  await page.screenshot({path:`${captures}/users.png`,fullPage:true});
+  await page.getByRole('link',{name:'Crear usuario',exact:true}).click();
+  await page.getByLabel('Nombre completo',{exact:false}).fill('Persona Prueba');
+  await page.getByLabel('Correo electrónico',{exact:false}).fill('persona@demo.local');
+  await page.getByLabel('Contraseña inicial',{exact:false}).fill('Valid12345');
+  await page.getByRole('combobox',{name:'Rol',exact:true}).selectOption('operario');
+  await page.getByRole('button',{name:'Crear usuario',exact:true}).click();
+  await expect(page.getByText('persona@demo.local',{exact:true})).toBeVisible();
+  await page.getByRole('link',{name:'Editar a Persona Prueba'}).click();
+  await page.getByRole('combobox',{name:'Rol',exact:true}).selectOption('propietario');
+  await page.getByRole('button',{name:'Guardar cambios',exact:true}).click();
+  const row=page.getByRole('row').filter({hasText:'persona@demo.local'});
+  await expect(row).toContainText('Propietario');
+  await row.getByRole('button',{name:'Desactivar',exact:true}).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.getByRole('button',{name:'Desactivar cuenta',exact:true}).click();
+  await expect(row).toContainText('Inactivo');
+});
+test('rol de consulta no puede entrar por URL ni ve acciones de gestión',async({page})=>{
+  await login(page,'Operario');
+  await expect(page.getByRole('link',{name:'Usuarios',exact:true})).toHaveCount(0);
+  await expect(page.getByRole('link',{name:'Registrar animal',exact:true})).toHaveCount(0);
+  await page.evaluate(()=>location.hash='#/usuarios/nuevo');
+  await expect(page.getByRole('heading',{name:'Acceso restringido'})).toBeVisible();
+});
+test('móvil: sin desbordamiento y búsqueda vacía recuperable',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('./');
+  await expect(page.getByRole('heading',{name:'Bienvenido de nuevo'})).toBeVisible();
+  await page.screenshot({path:`${captures}/login-mobile.png`,fullPage:true});
+  await login(page);
+  await page.screenshot({path:`${captures}/mobile.png`,fullPage:true});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+  await page.getByLabel('Buscar por arete o nombre').fill('no-existe');
+  await page.getByRole('button',{name:'Buscar',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'No encontramos coincidencias'})).toBeVisible();
+  await page.getByRole('link',{name:'Limpiar filtros'}).click();
+  await expect(page.getByText('V-001',{exact:true})).toBeVisible();
+  await page.getByRole('link',{name:'Registrar animal',exact:true}).click();
+  await page.screenshot({path:`${captures}/animal-mobile.png`,fullPage:true});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+});
+test('teclado: saltar al contenido conserva ruta y edad vacía enfoca campo visible',async({page})=>{
+  await login(page);
+  await page.locator('.skip-link').focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#\/animales$/);
+  await expect(page.locator('#main')).toBeFocused();
+  await page.getByRole('link',{name:'Registrar animal'}).click();
+  await page.getByLabel('Arete',{exact:false}).fill('V-110');
+  await page.getByLabel('Raza',{exact:false}).fill('Jersey');
+  await page.getByLabel('Procedencia',{exact:false}).fill('Compra');
+  await page.getByLabel('Estado inicial',{exact:false}).selectOption('seco');
+  await page.getByLabel('Información de edad').selectOption('edad');
+  await page.getByRole('button',{name:'Guardar animal'}).click();
+  await expect(page.locator('#edad_estimada_meses-error')).toBeVisible();
+  await expect(page.locator('#edad_estimada_meses')).toBeFocused();
+  await page.locator('#edad_estimada_meses').fill('0');
+  await page.getByRole('button',{name:'Guardar animal'}).click();
+  await expect(page.getByText('V-110',{exact:true})).toBeVisible();
+});
+test('API real simulada: CSRF/login, error 409 por campo y sesión vencida',async({page})=>{
+  let signed=false; let expired=false; const writes=[];
+  const admin={id:1,nombre:'Ana',email:'ana@finca.co',rol:'administrador',activo:true};
+  await page.route('**/api/v1/**',async route=>{
+    const req=route.request(), path=new URL(req.url()).pathname;
+    let status=200,body={};
+    if(req.method()==='POST') writes.push({path,csrf:req.headers()['x-csrf-token'],body:req.postDataJSON()});
+    if(path.endsWith('/auth/csrf')) body={csrf_token:'test-csrf'};
+    else if(path.endsWith('/auth/session')) { status=signed?200:401; body=signed?{usuario:admin}:{error:{code:'SESION_EXPIRADA',message:'Sin sesión'}}; }
+    else if(path.endsWith('/auth/login')) { signed=true; body={usuario:admin,csrf_token:'rotated'}; }
+    else if(path.endsWith('/animales') && req.method()==='POST') { status=409; body={error:{code:'ARETE_DUPLICADO',message:'El arete está ocupado.',fields:{arete:'Prueba otro identificador.'}}}; }
+    else if(expired) { status=401; body={error:{code:'SESION_EXPIRADA',message:'Expirada'}}; }
+    else body={items:[],total:0,page:1,page_size:20};
+    await route.fulfill({status,contentType:'application/json',body:JSON.stringify(body)});
+  });
+  await page.goto('http://127.0.0.1:5174/ui/');
+  await expect(page.getByText('Demostración · datos ficticios')).toHaveCount(0);
+  await page.getByLabel('Correo electrónico').fill('ana@finca.co');
+  await page.getByLabel('Contraseña',{exact:false}).fill('demo-password');
+  await page.getByRole('button',{name:'Iniciar sesión'}).click();
+  await expect(page.getByRole('heading',{name:'El hato, en orden'})).toBeVisible();
+  expect(writes[0].csrf).toBe('test-csrf');
+  await page.getByRole('link',{name:'Registrar animal'}).click();
+  await page.getByLabel('Arete',{exact:false}).fill('V-1');
+  await page.getByLabel('Raza',{exact:false}).fill('Jersey');
+  await page.getByLabel('Procedencia',{exact:false}).fill('Compra');
+  await page.getByLabel('Fecha de nacimiento',{exact:false}).fill('2020-01-01');
+  await page.getByLabel('Estado inicial',{exact:false}).selectOption('seco');
+  await page.getByRole('button',{name:'Guardar animal'}).click();
+  await expect(page.locator('#arete-error')).toHaveText('Prueba otro identificador.');
+  expect(writes[1].csrf).toBe('test-csrf');
+  expect(writes[1].body).not.toHaveProperty('responsable_id');
+  expired=true;
+  await page.getByRole('link',{name:'Volver a animales',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Bienvenido de nuevo'})).toBeVisible();
+  await expect(page.getByRole('alert')).toContainText('sesión terminó');
+});
