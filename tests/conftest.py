@@ -56,8 +56,12 @@ def api(tmp_path, monkeypatch):
         with SessionLocal() as db:
             return db.scalars(consulta).all()
 
+    def filas(consulta):  # varias columnas -> lista de tuplas
+        with SessionLocal() as db:
+            return [tuple(fila) for fila in db.execute(consulta).all()]
+
     yield SimpleNamespace(
-        reloj=reloj, contar=contar, consultar=consultar,
+        reloj=reloj, contar=contar, consultar=consultar, filas=filas,
         nuevo_cliente=lambda: TestClient(app, base_url="https://testserver"),
     )
     app.dependency_overrides.clear()

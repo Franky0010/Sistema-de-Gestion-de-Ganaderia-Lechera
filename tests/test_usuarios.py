@@ -104,7 +104,7 @@ def test_no_se_puede_dejar_el_sistema_sin_administrador_activo(api):
     for cuerpo in [{"activo": False}, {"rol": "operario"}]:
         r = escribir(admin, "PATCH", "/api/v1/usuarios/1", cuerpo)
         assert (r.status_code, r.json()["error"]["code"]) == (409, "ULTIMO_ADMINISTRADOR")
-    assert api.consultar(select(Usuario.activo, Usuario.rol).where(Usuario.id == 1)) == [(True, "administrador")]
+    assert api.filas(select(Usuario.activo, Usuario.rol).where(Usuario.id == 1)) == [(True, "administrador")]
     assert admin.get("/api/v1/auth/session").status_code == 200  # tampoco se revocó su sesión
 
 
