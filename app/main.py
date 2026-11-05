@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from . import auditoria, rutas_animales, rutas_auditoria, rutas_auth, rutas_usuarios, service
+from . import auditoria, migraciones, rutas_animales, rutas_auditoria, rutas_auth, rutas_usuarios, service
 from .db_deps import SessionLocal, engine, get_session  # noqa: F401  (get_session se reexporta)
 from .errores import instalar_manejadores
 from .models import Animal, Base
@@ -18,6 +18,7 @@ from .models import Animal, Base
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    migraciones.migrar(engine)  # lleva una base existente al esquema actual
     Base.metadata.create_all(engine)
     auditoria.proteger_auditoria(engine)  # triggers: la auditoría no se edita ni se borra
     yield

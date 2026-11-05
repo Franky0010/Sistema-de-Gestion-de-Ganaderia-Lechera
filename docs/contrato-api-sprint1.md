@@ -131,7 +131,7 @@ AnimalNuevo:
 
 Enviar **exactamente uno** de nacimiento o edad estimada en meses (entero >=0, edad al ingreso); el otro es null. `nombre` opcional/null; arete (máx. 40), raza (máx. 80), procedencia (máx. 160), ingreso y estado inicial requeridos. Rechazar fechas futuras y nacimiento posterior al ingreso. Normalizar arete trim + mayúsculas (no distingue mayúsculas) y no reutilizarlo: el arete es único para siempre porque los animales nunca se borran. El estado inicial permitido en esta UI es en_produccion/seco/no_productivo: un alta fuera del hato requiere el flujo de salida PB-06, fuera de este sprint. Esta restricción de altas es una propuesta a confirmar por el Product Owner. Un `estado_inicial` no permitido responde 422 en el campo `estado_inicial`.
 
-Restricciones también aplicadas en la base de datos: arete único, edad estimada >= 0, nacimiento y edad estimada nunca juntos, nacimiento no posterior al ingreso. Los animales creados por el PoC conservan sus campos nuevos en null.
+Restricciones también aplicadas en la base de datos: arete único y guardado ya normalizado (sin espacios extremos, en mayúsculas, no vacío), edad estimada >= 0, nacimiento y edad estimada nunca juntos, nacimiento no posterior al ingreso. Los animales creados por el PoC conservan sus campos nuevos en null.
 
 Animal público: los campos anteriores excepto `estado_inicial`, más `id`, `estado_actual`, `estado_desde`, `version`. `estado_actual` se calcula para la fecha de negocio de hoy; un cambio retroactivo no implica necesariamente cambiar el estado actual si existe otro posterior.
 
@@ -196,7 +196,7 @@ Implementar handlers de FastAPI para normalizar errores de Pydantic y HTTPExcept
 - `python -m app.respaldo crear [--carpeta respaldos] [--conservar 14]` genera una copia consistente de la base (API de backup de SQLite), verifica su integridad y conserva las últimas 14.
 - `python -m app.respaldo restaurar <archivo>` valida el respaldo, guarda la base actual como `poc.db.previo` y restaura. Detener el servidor antes de restaurar.
 - Programar `crear` una vez al día en el sistema operativo (cron o Programador de tareas). Objetivo: pérdida máxima de 24 horas y restauración en menos de 30 minutos. Los respaldos no se versionan en git.
-- Cambios de esquema en tablas existentes: `create_all` no los aplica. Mientras no haya migraciones (Alembic, a proponer en el Sprint 2), hay que recrear la base de desarrollo o aplicar `ALTER TABLE`.
+- Cambios de esquema: `create_all` no modifica tablas existentes. `app/migraciones.py` reconstruye la tabla `animal` conservando sus datos cuando le faltan columnas o restricciones; se ejecuta sola al arrancar la API y con `python -m app.migraciones`. Para cambios futuros en otras tablas se propone adoptar Alembic en el Sprint 2.
 
 ## Orden de implementación y comprobación
 

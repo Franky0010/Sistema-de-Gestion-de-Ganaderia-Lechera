@@ -1,16 +1,17 @@
 """S1-HT-02-BASE: transacciones, restricciones y auditoría de animales y estados (PB-03)."""
 import json
+import threading
 from datetime import timedelta
 
 import pytest
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from app import auditoria
+from app import auditoria, servicio_usuarios
 from app.models import Animal, Auditoria, EstadoAnimal, Ordeno
 from app.servicio_animales import hoy
 
-from .conftest import cliente_con_sesion, escribir
+from .conftest import CLAVE, cliente_con_sesion, escribir, iniciar_sesion, pedir_csrf
 
 HOY = hoy()
 INGRESO = HOY - timedelta(days=30)
@@ -90,6 +91,8 @@ def test_solo_el_administrador_escribe_y_se_exige_csrf(api):
     antes = totales(api)
     operario = cliente_con_sesion(api, "operario")
     assert codigo(escribir(operario, "POST", "/api/v1/animales", nuevo())) == (403, "SIN_PERMISO")
+    propietario = cliente_con_sesion(api, "propietario")
+    assert codigo(escribir(propietario, "POST", "/api/v1/animales", nuevo())) == (403, "SIN_PERMISO")
     admin = cliente_con_sesion(api, "admin")
     assert codigo(admin.post("/api/v1/animales", json=nuevo())) == (403, "CSRF_INVALIDO")
     assert totales(api) == antes
@@ -109,6 +112,53 @@ def test_si_falla_la_auditoria_el_alta_se_revierte_completa(api, monkeypatch):
     with pytest.raises(RuntimeError):
         escribir(admin, "POST", "/api/v1/animales", nuevo())
     assert totales(api) == antes  # ni animal, ni estado, ni auditoría
+
+
+def test_campos_obligatorios_ausentes(api):
+    admin = cliente_con_sesion(api, "admin")
+    antes = totales(api)
+    r = escribir(admin, "POST", "/api/v1/animales", {"nombre": "Luna"})  # sin nada más
+    assert codigo(r) == (422, "VALIDACION")
+    assert {"arete", "raza", "procedencia", "fecha_ingreso", "estado_inicial"} <= set(r.json()["error"]["fields"])
+    assert totales(api) == antes
+
+
+def test_el_nombre_es_opcional(api):
+    admin = cliente_con_sesion(api, "admin")
+    cuerpo = nuevo(arete="V-040")
+    del cuerpo["nombre"]
+    assert escribir(admin, "POST", "/api/v1/animales", cuerpo).json()["nombre"] is None
+    assert crear(admin, arete="V-041", nombre="   ")["nombre"] is None
+
+
+def test_el_cliente_no_puede_fijar_responsable_ni_datos_de_auditoria(api):
+    admin = cliente_con_sesion(api, "admin")
+    antes = totales(api)
+    for extra in ({"responsable_id": 3}, {"usuario": "otro@finca.co"}, {"momento": "2020-01-01T00:00:00Z"}):
+        assert codigo(escribir(admin, "POST", "/api/v1/animales", nuevo(**extra))) == (422, "VALIDACION")
+    assert totales(api) == antes
+    crear(admin, arete="V-050")
+    assert api.filas(select(EstadoAnimal.responsable_id)) == [(1,)]  # siempre el de la sesión
+
+
+def test_dos_altas_simultaneas_con_el_mismo_arete_solo_crean_una(api):
+    with api.SessionLocal() as db:  # un segundo administrador: iniciar sesión dos veces con el mismo usuario revoca la primera
+        servicio_usuarios.crear_usuario(db, None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
+    clientes = [cliente_con_sesion(api, "admin"), api.nuevo_cliente()]
+    assert iniciar_sesion(clientes[1], "admin2@finca.co").status_code == 200
+    tokens = [pedir_csrf(c) for c in clientes]
+    antes = totales(api)
+    barrera, estados = threading.Barrier(2), []
+
+    def alta(i):
+        barrera.wait()
+        estados.append(clientes[i].post("/api/v1/animales", json=nuevo(), headers={"X-CSRF-Token": tokens[i]}).status_code)
+
+    hilos = [threading.Thread(target=alta, args=(i,)) for i in range(2)]
+    [h.start() for h in hilos]
+    [h.join() for h in hilos]
+    assert sorted(estados) == [201, 409]
+    assert totales(api) == (antes[0] + 1, antes[1] + 1, antes[2] + 1)  # un animal, un estado, una auditoría
 
 
 # ---------- cambio de estado ----------
@@ -218,6 +268,9 @@ def _falla(api, *objetos):
 
 
 def test_la_base_rechaza_datos_incoherentes(api):
+    _falla(api, Animal(arete="v-001"))                                                         # arete en minúsculas
+    _falla(api, Animal(arete="  V-002  "))                                                     # espacios extremos
+    _falla(api, Animal(arete=""))                                                              # arete vacío
     _falla(api, Animal(arete="A1", fecha_nacimiento=INGRESO, edad_estimada_meses=5))          # ambos
     _falla(api, Animal(arete="A2", edad_estimada_meses=-3))                                    # negativa
     _falla(api, Animal(arete="A3", fecha_ingreso=INGRESO, fecha_nacimiento=HOY))               # nacimiento > ingreso

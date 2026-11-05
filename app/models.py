@@ -48,6 +48,8 @@ class Sesion(Base):
 class Animal(Base):
     __tablename__ = "animal"
     __table_args__ = (
+        CheckConstraint("length(arete) > 0 AND arete = upper(trim(arete))",
+                        name="ck_animal_arete_normalizado"),
         CheckConstraint("edad_estimada_meses IS NULL OR edad_estimada_meses >= 0",
                         name="ck_animal_edad_no_negativa"),
         # Nacimiento o edad estimada, nunca ambos (el servicio exige exactamente uno).

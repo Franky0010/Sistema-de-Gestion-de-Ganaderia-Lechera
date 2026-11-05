@@ -8,7 +8,7 @@ import getpass
 import os
 import sys
 
-from . import auditoria, servicio_usuarios
+from . import auditoria, migraciones, servicio_usuarios
 from .db_deps import SessionLocal, engine
 from .errores import ErrorApi
 from .models import Base
@@ -27,6 +27,7 @@ def main(argv=None) -> int:
             print("Las contraseñas no coinciden.")
             return 1
 
+    migraciones.migrar(engine)
     Base.metadata.create_all(engine)
     auditoria.proteger_auditoria(engine)
     with SessionLocal() as db:
