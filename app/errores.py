@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from sqlalchemy.exc import IntegrityError
 
 
 class ErrorApi(Exception):
@@ -42,3 +43,15 @@ def instalar_manejadores(app: FastAPI) -> None:
         mensaje = exc.detail if isinstance(exc.detail, str) else "No se pudo completar la operación."
         return _respuesta(exc.status_code, codigos.get(exc.status_code, "HTTP_ERROR"), mensaje,
                           headers=getattr(exc, "headers", None))
+
+    @app.exception_handler(IntegrityError)
+    async def _integridad(_request: Request, exc: IntegrityError):
+        """Red de seguridad: una violación de la BD que ningún servicio tradujo no debe ser un 500."""
+        texto = str(exc.orig).upper()
+        if "FOREIGN KEY" in texto:
+            return _respuesta(422, "REFERENCIA_INVALIDA", "El registro al que se hace referencia no existe.")
+        if "UNIQUE" in texto:
+            return _respuesta(409, "DUPLICADO", "Ya existe un registro con esos datos.")
+        if "CHECK" in texto:
+            return _respuesta(422, "VALIDACION", "Los valores enviados no son coherentes.")
+        return _respuesta(409, "CONFLICTO_DATOS", "No se pudo guardar por un conflicto con los datos existentes.")

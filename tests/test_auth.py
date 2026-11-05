@@ -49,7 +49,7 @@ def test_credenciales_invalidas_no_revelan_si_la_cuenta_existe(api):
 
 def test_cuenta_inactiva_solo_se_revela_con_contrasena_correcta(api):
     admin = cliente_con_sesion(api, "admin")
-    assert escribir(admin, "PATCH", "/api/v1/usuarios/2", {"activo": False}).status_code == 200
+    assert escribir(admin, "PATCH", "/api/v1/usuarios/2", {"activo": False, "motivo": "Prueba"}).status_code == 200
     correcta = iniciar_sesion(api.nuevo_cliente(), EMAIL)
     incorrecta = iniciar_sesion(api.nuevo_cliente(), EMAIL, "contraseña-incorrecta")
     assert (correcta.status_code, correcta.json()["error"]["code"]) == (403, "CUENTA_INACTIVA")

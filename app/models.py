@@ -7,6 +7,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+ESTADOS_ANIMAL = ("en_produccion", "seco", "no_productivo", "fuera_del_hato")
 
 class Base(DeclarativeBase):
     pass
@@ -46,11 +47,51 @@ class Sesion(Base):
 
 class Animal(Base):
     __tablename__ = "animal"
+    __table_args__ = (
+        CheckConstraint("length(arete) > 0 AND arete = upper(trim(arete))",
+                        name="ck_animal_arete_normalizado"),
+        CheckConstraint("edad_estimada_meses IS NULL OR edad_estimada_meses >= 0",
+                        name="ck_animal_edad_no_negativa"),
+        # Nacimiento o edad estimada, nunca ambos (el servicio exige exactamente uno).
+        CheckConstraint("NOT (fecha_nacimiento IS NOT NULL AND edad_estimada_meses IS NOT NULL)",
+                        name="ck_animal_nacimiento_o_edad"),
+        CheckConstraint("fecha_nacimiento IS NULL OR fecha_ingreso IS NULL OR fecha_nacimiento <= fecha_ingreso",
+                        name="ck_animal_nacimiento_antes_ingreso"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     # Arete normalizado (sin espacios extremos, en mayúsculas). RN01 / RF02.
     arete: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     nombre: Mapped[Optional[str]] = mapped_column(String(100))
+    # Las columnas nuevas admiten NULL solo para no invalidar los animales del PoC;
+    # el servicio (PB-03) las exige todas en el alta.
+    raza: Mapped[Optional[str]] = mapped_column(String(80))
+    procedencia: Mapped[Optional[str]] = mapped_column(String(160))
+    fecha_ingreso: Mapped[Optional[date]] = mapped_column(Date)
+    fecha_nacimiento: Mapped[Optional[date]] = mapped_column(Date)
+    edad_estimada_meses: Mapped[Optional[int]] = mapped_column(Integer)
+    # Control de concurrencia optimista: sube en cada cambio de estado.
+    version: Mapped[int] = mapped_column(Integer, default=1, server_default="1", nullable=False)
+
+
+class EstadoAnimal(Base):
+    """Historial de estados: nunca se borra ni se edita; el vigente es el último por fecha."""
+    __tablename__ = "estado_animal"
+    __table_args__ = (
+        # Un cambio por animal y día, incluido el estado inicial.
+        UniqueConstraint("animal_id", "fecha_desde", name="uq_estado_animal_dia"),
+        CheckConstraint("estado IN ('en_produccion', 'seco', 'no_productivo', 'fuera_del_hato')",
+                        name="ck_estado_valido"),
+        CheckConstraint("length(trim(motivo)) > 0", name="ck_estado_motivo"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    animal_id: Mapped[int] = mapped_column(ForeignKey("animal.id"), nullable=False)
+    estado: Mapped[str] = mapped_column(String(20), nullable=False)
+    fecha_desde: Mapped[date] = mapped_column(Date, nullable=False)
+    motivo: Mapped[str] = mapped_column(String(500), nullable=False)
+    responsable_id: Mapped[int] = mapped_column(ForeignKey("usuario.id"), nullable=False)
+    creado_en: Mapped[datetime] = mapped_column(DateTime, default=_ahora_utc, nullable=False)
 
 
 class Ordeno(Base):

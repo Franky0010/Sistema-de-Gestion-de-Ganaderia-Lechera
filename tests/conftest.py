@@ -61,7 +61,7 @@ def api(tmp_path, monkeypatch):
             return [tuple(fila) for fila in db.execute(consulta).all()]
 
     yield SimpleNamespace(
-        reloj=reloj, contar=contar, consultar=consultar, filas=filas,
+        reloj=reloj, contar=contar, consultar=consultar, filas=filas, SessionLocal=SessionLocal,
         nuevo_cliente=lambda: TestClient(app, base_url="https://testserver"),
     )
     app.dependency_overrides.clear()

@@ -91,13 +91,15 @@ def crear_usuario(db: Session, actor: Usuario | None, *, nombre: str, email: str
     return usuario
 
 
-def actualizar_usuario(db: Session, actor: Usuario, usuario_id: int, cambios: dict) -> Usuario:
+def actualizar_usuario(db: Session, actor: Usuario, usuario_id: int, cambios: dict,
+                       motivo: str | None = None) -> Usuario:
     usuario = db.get(Usuario, usuario_id)
     if usuario is None:
         raise ErrorApi(404, "NO_ENCONTRADO", "El usuario no existe.")
     nuevos = {k: v for k, v in _validar(cambios).items() if getattr(usuario, k) != v}
     if not nuevos:
         return usuario  # nada cambió: sin escritura ni auditoría
+    motivo = auditoria.validar_motivo(motivo, obligatorio="activo" in nuevos)
 
     antes = snapshot(usuario)
     era_admin_activo = antes["rol"] == "administrador" and antes["activo"]
@@ -119,7 +121,8 @@ def actualizar_usuario(db: Session, actor: Usuario, usuario_id: int, cambios: di
         accion = ("desactivar" if nuevos.get("activo") is False
                   else "reactivar" if nuevos.get("activo") is True else "actualizar")
         auditoria.registrar(db, entidad="usuario", entidad_id=usuario.id, accion=accion,
-                            actor=actor, antes=antes, despues=snapshot(usuario))
+                            actor=actor, antes=antes, despues=snapshot(usuario),
+                            motivo=motivo)
         db.commit()
     except ErrorApi:
         db.rollback()
