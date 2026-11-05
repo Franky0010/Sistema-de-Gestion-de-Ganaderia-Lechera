@@ -22,12 +22,12 @@ Abrir `http://127.0.0.1:5173/ui/`. En el acceso, seleccionar Administrador, Oper
 npm run dev
 ```
 
-El cliente usa `/api/v1` y el servidor Vite redirige `/api` a `http://127.0.0.1:8000`. El backend debe implementar la [propuesta de contrato](../docs/contrato-api-sprint1.md). El PoC actual no la implementa: un error de conexión es esperado hasta que estén disponibles esas rutas. El cliente nunca cambia a datos de ejemplo por un fallo de API.
+El cliente usa `/api/v1` y Vite redirige `/api` a `http://127.0.0.1:8000`. Sesión y usuarios están implementados e integrados según el [contrato](../docs/contrato-api-sprint1.md). Las rutas versionadas de animales y estados siguen pendientes. Para crear el administrador y configurar el origen permitido, seguir las [instrucciones del README principal](../README.md#instalación-y-ejecución). El cliente conserva los errores de la API para que puedan corregirse.
 
 ### Reparto para integrar
 
-- Compañero 1: CSRF/sesión/login/logout, listado/detalle/alta/edición de usuarios, autorización por rol.
-- Compañero 2: listado/detalle/registro de animales, cambios de estado, versión y auditoría transaccional.
+- Franky Marin (@Franky0010): CSRF/sesión/login/logout, listado/detalle/alta/edición de usuarios, autorización por rol.
+- Juan Manuel Alvarez (@juanalvarez6): listado/detalle/registro de animales, cambios de estado, versión y auditoría transaccional.
 - Juanloaiza25: las cinco pantallas, consumo de API, validaciones visuales, errores, adaptación móvil y pruebas del navegador.
 
 Los permisos en el navegador solo controlan la experiencia. La protección real, expiración, auditoría y reglas de integridad pertenecen al servidor.
@@ -58,7 +58,7 @@ npm run build
 
 Playwright usa Chrome o Edge instalados en Windows; en otros entornos instalar Chromium con `npx playwright install chromium`. Los tests levantan una demo en 5173 y la variante API en 5174. Las pruebas API del navegador interceptan respuestas según el contrato: **no son pruebas del backend real**. Las capturas quedan en `.impeccable/review/` en la raíz del repositorio, ignoradas por Git.
 
-El detector de diseño de Impeccable solo pudo ejecutarse en modo reducido por falta de módulos de análisis en su entorno; la revisión visual se hace también con capturas reales en escritorio y móvil.
+El rediseño se comprobó con capturas en 320, 390, 768, 1280 y 1440 px. Se corrigieron el texto del selector de edad en móvil y la distribución de acciones en tablet. Los SVG oficiales de Google Material Symbols se sirven desde los assets locales.
 
 ## Producción
 
@@ -79,4 +79,4 @@ HTTPS, cookies seguras, protección CSRF, cabeceras de seguridad y almacenamient
 
 ## Límites del avance
 
-No se cierran las issues #26, #28, #30, #32, #34: falta aprobar el contrato, integrar los endpoints reales y revisar el código entre compañeros. El simulador no demuestra incompatibilidades con ordeños, concurrencia de SQLite, expiración real ni seguridad de servidor. HT-02 y las verificaciones de permisos de módulos posteriores continúan según el backlog.
+Las subtareas #26 y #28 tienen comprobación integrada de sesión y usuarios, incluidos duplicados, campos obligatorios y expiración; falta la revisión de un compañero para cerrarlas. #30 requiere completar su verificación por rol con la API real. #32 y #34 esperan la API versionada de animales y estados. HT-02 y las verificaciones de permisos de módulos posteriores continúan según el backlog.
