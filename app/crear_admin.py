@@ -30,6 +30,7 @@ def main(argv=None) -> int:
     migraciones.migrar(engine)
     Base.metadata.create_all(engine)
     auditoria.proteger_auditoria(engine)
+    migraciones.proteger_historial(engine)
     with SessionLocal() as db:
         try:
             usuario = servicio_usuarios.crear_usuario(

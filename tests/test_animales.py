@@ -4,11 +4,14 @@ import threading
 from datetime import timedelta
 
 import pytest
-from sqlalchemy import select
+from fastapi.testclient import TestClient
+from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 
-from app import auditoria, servicio_usuarios
-from app.models import Animal, Auditoria, EstadoAnimal, Ordeno
+from app import auditoria, migraciones, servicio_usuarios
+from app.database import crear_engine
+from app.main import app
+from app.models import Animal, Auditoria, Base, EstadoAnimal, Ordeno
 from app.servicio_animales import hoy
 
 from .conftest import CLAVE, cliente_con_sesion, escribir, iniciar_sesion, pedir_csrf
@@ -180,7 +183,7 @@ def test_motivo_obligatorio_y_estado_valido(api):
     admin = cliente_con_sesion(api, "admin")
     a = crear(admin)
     antes = totales(api)
-    for cuerpo, campo in [(cambio(motivo="  "), "motivo"), (cambio(estado="fuera_del_hato"), "estado"),
+    for cuerpo, campo in [(cambio(motivo="  "), "motivo"), (cambio(estado="volando"), "estado"),
                           (cambio(fecha_desde=(HOY + timedelta(days=1)).isoformat()), "fecha_desde"),
                           (cambio(fecha_desde=(INGRESO - timedelta(days=1)).isoformat()), "fecha_desde"),
                           (cambio(estado="en_produccion", fecha_desde=HOY.isoformat()), "estado")]:  # igual al vigente
@@ -284,3 +287,187 @@ def test_la_base_rechaza_referencias_y_estados_invalidos(api):
     _falla(api, EstadoAnimal(animal_id=a["id"], estado="volando", fecha_desde=HOY, motivo="x", responsable_id=1))  # CHECK
     _falla(api, EstadoAnimal(animal_id=a["id"], estado="seco", fecha_desde=INGRESO, motivo="x", responsable_id=1))  # un cambio/día
     _falla(api, EstadoAnimal(animal_id=a["id"], estado="seco", fecha_desde=HOY, motivo="  ", responsable_id=1))   # motivo vacío
+
+
+# ---------- S1-PB-04-BE: estados, historial e incompatibilidades ----------
+
+def dia(n):
+    return (HOY - timedelta(days=n)).isoformat()
+
+
+def cambiar(admin, animal_id, estado, fecha, version, motivo="Cambio de prueba"):
+    return escribir(admin, "POST", f"/api/v1/animales/{animal_id}/estados",
+                    {"estado": estado, "fecha_desde": fecha, "motivo": motivo, "version": version})
+
+
+def ordeno(api, animal_id, fecha, anulado=False):
+    with api.SessionLocal() as db:
+        db.add(Ordeno(animal_id=animal_id, fecha=fecha, turno="mañana", centilitros_producidos=1000,
+                      centilitros_descartados=0, anulado=anulado, creado_por="prueba"))
+        db.commit()
+
+
+@pytest.mark.parametrize("estado", ["en_produccion", "seco", "no_productivo", "fuera_del_hato"])
+def test_los_cuatro_estados_son_validos_en_un_cambio(api, estado):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin, estado_inicial="seco" if estado == "en_produccion" else "en_produccion")
+    r = cambiar(admin, a["id"], estado, dia(5), 1)
+    assert r.status_code == 201, r.text
+    assert (r.json()["estado"]["estado"], r.json()["animal"]["estado_actual"]) == (estado, estado)
+
+
+def test_el_alta_sigue_sin_admitir_fuera_del_hato(api):
+    admin = cliente_con_sesion(api, "admin")
+    r = escribir(admin, "POST", "/api/v1/animales", nuevo(estado_inicial="fuera_del_hato"))
+    assert codigo(r) == (422, "VALIDACION") and "estado_inicial" in r.json()["error"]["fields"]
+
+
+def test_despues_de_salir_del_hato_no_hay_mas_cambios(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    assert cambiar(admin, a["id"], "fuera_del_hato", dia(5), 1).status_code == 201
+    antes = totales(api)
+    assert codigo(cambiar(admin, a["id"], "en_produccion", dia(1), 2)) == (409, "ESTADO_INCOMPATIBLE")
+    assert totales(api) == antes
+
+
+def test_la_salida_del_hato_debe_ser_el_ultimo_cambio(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    assert cambiar(admin, a["id"], "seco", dia(5), 1).status_code == 201
+    antes = totales(api)
+    r = cambiar(admin, a["id"], "fuera_del_hato", dia(10), 2)  # retroactiva, con un cambio posterior
+    assert codigo(r) == (409, "ESTADO_INCOMPATIBLE") and "fecha_desde" in r.json()["error"]["fields"]
+    assert totales(api) == antes
+
+
+@pytest.mark.parametrize("estado", ["seco", "no_productivo", "fuera_del_hato"])
+def test_ordeno_vigente_bloquea_todo_estado_no_productivo_incluida_la_frontera(api, estado):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    ordeno(api, a["id"], HOY - timedelta(days=5))
+    antes = totales(api)
+    assert codigo(cambiar(admin, a["id"], estado, dia(5), 1)) == (409, "ESTADO_INCOMPATIBLE")  # mismo día del ordeño
+    assert totales(api) == antes
+    assert cambiar(admin, a["id"], estado, dia(4), 1).status_code == 201  # el día siguiente: ya no lo contradice
+
+
+def test_ordenos_de_otro_animal_no_interfieren(api):
+    admin = cliente_con_sesion(api, "admin")
+    a, b = crear(admin, arete="V-060"), crear(admin, arete="V-061")
+    ordeno(api, b["id"], HOY - timedelta(days=2))
+    assert cambiar(admin, a["id"], "seco", dia(5), 1).status_code == 201
+
+
+def test_cambio_retroactivo_solo_compara_ordenos_de_su_tramo(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    assert cambiar(admin, a["id"], "seco", dia(20), 1).status_code == 201          # prod -> seco(20)
+    assert cambiar(admin, a["id"], "en_produccion", dia(10), 2).status_code == 201  # -> prod(10)
+    ordeno(api, a["id"], HOY - timedelta(days=5))                                   # ordeño en el tramo productivo actual
+    # no_productivo desde el día 25 rige hasta el día 20 (siguiente cambio): el ordeño del día 5 no lo contradice
+    assert cambiar(admin, a["id"], "no_productivo", dia(25), 3).status_code == 201
+    # pero un ordeño dentro del tramo sí lo bloquea
+    b = crear(admin, arete="V-070")
+    assert cambiar(admin, b["id"], "seco", dia(20), 1).status_code == 201
+    ordeno(api, b["id"], HOY - timedelta(days=22))                                  # cae en el tramo prod -> (seco día 20)
+    assert codigo(cambiar(admin, b["id"], "no_productivo", dia(25), 2)) == (409, "ESTADO_INCOMPATIBLE")
+
+
+def test_ordenos_anulados_no_bloquean(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    ordeno(api, a["id"], HOY - timedelta(days=3), anulado=True)
+    assert cambiar(admin, a["id"], "seco", dia(5), 1).status_code == 201
+
+
+def test_incompatibilidad_con_un_ordeno_real_registrado_por_la_api_del_poc(api):
+    """Dato de ordeño real (POST /ordenos del PoC), no una fila insertada a mano."""
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    poc = TestClient(app, base_url="https://testserver")
+    r = poc.post("/ordenos", headers={"X-Usuario": "operario@finca.co"},
+                 json={"animal_id": a["id"], "fecha": dia(3), "turno": "mañana",
+                       "litros_producidos": "12.50", "litros_descartados": "0"})
+    assert r.status_code == 201, r.text
+    assert codigo(cambiar(admin, a["id"], "seco", dia(5), 1)) == (409, "ESTADO_INCOMPATIBLE")
+
+
+@pytest.mark.xfail(strict=True, reason="PENDIENTE PB-07: POST /ordenos aún no consulta el estado del animal")
+def test_pendiente_el_registro_de_ordenos_debe_rechazar_animales_no_productivos(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    assert cambiar(admin, a["id"], "seco", dia(5), 1).status_code == 201
+    r = TestClient(app, base_url="https://testserver").post(
+        "/ordenos", headers={"X-Usuario": "operario@finca.co"},
+        json={"animal_id": a["id"], "fecha": dia(1), "turno": "mañana",
+              "litros_producidos": "10", "litros_descartados": "0"})
+    assert r.status_code in (409, 422)  # hoy responde 201: la integración queda pendiente
+
+
+def test_historial_conserva_fecha_motivo_responsable_en_orden_cronologico(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    assert cambiar(admin, a["id"], "seco", dia(10), 1, motivo="Fin de lactancia").status_code == 201
+    # llega después pero con fecha anterior: el historial se ordena por fecha efectiva, no por llegada
+    assert cambiar(admin, a["id"], "no_productivo", dia(20), 2, motivo="Corrección retroactiva").status_code == 201
+    r = admin.get(f"/api/v1/animales/{a['id']}/estados").json()
+    assert [(e["estado"], e["fecha_desde"]) for e in r["items"]] == [
+        ("en_produccion", dia(30)), ("no_productivo", dia(20)), ("seco", dia(10))]
+    assert (r["total"], r["page"], r["page_size"]) == (3, 1, 20)
+    por_estado = {e["estado"]: e for e in r["items"]}
+    assert (por_estado["seco"]["motivo"], por_estado["seco"]["responsable_id"], por_estado["seco"]["animal_id"]) == ("Fin de lactancia", 1, a["id"])
+    assert por_estado["en_produccion"]["motivo"] == "Estado inicial al registrar el animal"
+    assert admin.get(f"/api/v1/animales/{a['id']}/estados?page=2&page_size=2").json()["items"][0]["estado"] == "seco"
+    assert admin.get(f"/api/v1/animales/{a['id']}/estados?page_size=101").status_code == 422
+
+
+def test_historial_lo_leen_los_tres_roles_y_no_existe_para_animal_inexistente(api):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    for rol in ("operario", "propietario"):
+        assert cliente_con_sesion(api, rol).get(f"/api/v1/animales/{a['id']}/estados").status_code == 200
+    assert api.nuevo_cliente().get(f"/api/v1/animales/{a['id']}/estados").status_code == 401
+    assert admin.get("/api/v1/animales/999/estados").json()["error"]["code"] == "NO_ENCONTRADO"
+
+
+def test_el_historial_no_se_puede_alterar_ni_por_la_api_ni_por_la_base(api, tmp_path):
+    admin = cliente_con_sesion(api, "admin")
+    a = crear(admin)
+    for metodo in ("PUT", "PATCH", "DELETE"):
+        assert escribir(admin, metodo, f"/api/v1/animales/{a['id']}/estados", {}).status_code == 405
+    engine = crear_engine(f"sqlite:///{tmp_path / 'h.db'}")
+    Base.metadata.create_all(engine)
+    migraciones.proteger_historial(engine)
+    migraciones.proteger_historial(engine)  # idempotente
+    with engine.begin() as con:
+        con.execute(text("INSERT INTO usuario (nombre, email, hash_clave, rol, activo, creado_en, actualizado_en) VALUES ('u','u@f.co','x','administrador',1,'2026-01-01','2026-01-01')"))
+        con.execute(text("INSERT INTO animal (arete, version) VALUES ('A1', 1)"))
+        con.execute(text("INSERT INTO estado_animal (animal_id, estado, fecha_desde, motivo, responsable_id, creado_en) VALUES (1,'seco','2026-01-01','m',1,'2026-01-01')"))
+    for sentencia in ("UPDATE estado_animal SET motivo = 'alterado'", "DELETE FROM estado_animal"):
+        with pytest.raises(Exception):
+            with engine.begin() as con:
+                con.execute(text(sentencia))
+    engine.dispose()
+
+
+def test_dos_cambios_simultaneos_con_la_misma_version_solo_aplican_uno(api):
+    with api.SessionLocal() as db:
+        servicio_usuarios.crear_usuario(db, None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
+    clientes = [cliente_con_sesion(api, "admin"), api.nuevo_cliente()]
+    assert iniciar_sesion(clientes[1], "admin2@finca.co").status_code == 200
+    a = crear(clientes[0])
+    tokens = [pedir_csrf(c) for c in clientes]
+    barrera, estados = threading.Barrier(2), []
+
+    def intento(i):
+        barrera.wait()
+        estados.append(clientes[i].post(
+            f"/api/v1/animales/{a['id']}/estados", headers={"X-CSRF-Token": tokens[i]},
+            json={"estado": "seco" if i == 0 else "no_productivo", "fecha_desde": dia(5), "motivo": "Carrera", "version": 1}).status_code)
+
+    hilos = [threading.Thread(target=intento, args=(i,)) for i in range(2)]
+    [h.start() for h in hilos]
+    [h.join() for h in hilos]
+    assert sorted(estados) == [201, 409]
+    assert api.filas(select(Animal.version)) == [(2,)] and api.contar(EstadoAnimal) == 2  # inicial + uno solo

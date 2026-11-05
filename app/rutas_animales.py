@@ -2,7 +2,7 @@
 from datetime import date
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, ConfigDict, StrictInt
 from sqlalchemy.orm import Session
 
@@ -45,6 +45,11 @@ def crear(datos: AnimalNuevo, ctx=Depends(solo_admin_escribe), db: Session = Dep
 def detalle(animal_id: int, _ctx=Depends(todos_los_roles), db: Session = Depends(get_session)):
     return servicio_animales.animal_publico(db, servicio_animales.obtener_animal(db, animal_id))
 
+@router.get("/{animal_id}/estados")
+def historial(animal_id: int, page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=100),
+              _ctx=Depends(todos_los_roles), db: Session = Depends(get_session)):
+    animal = servicio_animales.obtener_animal(db, animal_id)
+    return servicio_animales.listar_estados(db, animal, page=page, page_size=page_size)
 
 @router.post("/{animal_id}/estados", status_code=201)
 def cambiar_estado(animal_id: int, datos: CambioEstado, ctx=Depends(solo_admin_escribe),

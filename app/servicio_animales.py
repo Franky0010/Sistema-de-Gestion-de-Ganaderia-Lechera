@@ -13,10 +13,11 @@ from sqlalchemy.orm import Session
 
 from . import auditoria, seguridad
 from .errores import ErrorApi
-from .models import Animal, EstadoAnimal, Ordeno, Usuario
+from .models import ESTADOS_ANIMAL, Animal, EstadoAnimal, Ordeno, Usuario
 
-ESTADOS_SELECCIONABLES = ("en_produccion", "seco", "no_productivo")  # fuera_del_hato = PB-06
+ESTADOS_ALTA = ("en_produccion", "seco", "no_productivo")
 MOTIVO_ALTA = "Estado inicial al registrar el animal"
+MENSAJE_ESTADOS = "Usa en_produccion, seco, no_productivo o fuera_del_hato."
 _BOGOTA = timezone(timedelta(hours=-5))  # Colombia no usa horario de verano
 
 
@@ -66,7 +67,7 @@ def _validar_alta(c: dict) -> dict:
             errores["fecha_nacimiento"] = "No puede ser posterior a la fecha de ingreso."
     elif edad < 0:
         errores["edad_estimada_meses"] = "Debe ser 0 o mayor."
-    if c.get("estado_inicial") not in ESTADOS_SELECCIONABLES:
+    if c.get("estado_inicial") not in ESTADOS_ALTA:
         errores["estado_inicial"] = "Usa en_produccion, seco o no_productivo."
     if errores:
         raise ErrorApi(422, "VALIDACION", "Revisa los campos indicados.", errores)
@@ -84,7 +85,7 @@ def snapshot(a: Animal, estado: str | None = None) -> dict:
     return datos
 
 
-def _estado_en(db: Session, animal_id: int, fecha: date) -> EstadoAnimal | None:
+def estado_en(db: Session, animal_id: int, fecha: date) -> EstadoAnimal | None:
     return db.scalars(
         select(EstadoAnimal)
         .where(EstadoAnimal.animal_id == animal_id, EstadoAnimal.fecha_desde <= fecha)
@@ -93,7 +94,7 @@ def _estado_en(db: Session, animal_id: int, fecha: date) -> EstadoAnimal | None:
 
 
 def animal_publico(db: Session, a: Animal) -> dict:
-    actual = _estado_en(db, a.id, hoy())
+    actual = estado_en(db, a.id, hoy())
     return {
         "id": a.id, "arete": a.arete, "nombre": a.nombre, "raza": a.raza, "procedencia": a.procedencia,
         "fecha_ingreso": _iso(a.fecha_ingreso), "fecha_nacimiento": _iso(a.fecha_nacimiento),
@@ -108,6 +109,22 @@ def estado_publico(e: EstadoAnimal) -> dict:
     return {"id": e.id, "animal_id": e.animal_id, "estado": e.estado,
             "fecha_desde": _iso(e.fecha_desde), "motivo": e.motivo, "responsable_id": e.responsable_id}
 
+def _siguiente_estado(db: Session, animal_id: int, fecha: date) -> EstadoAnimal | None:
+    return db.scalars(
+        select(EstadoAnimal).where(EstadoAnimal.animal_id == animal_id, EstadoAnimal.fecha_desde > fecha)
+        .order_by(EstadoAnimal.fecha_desde, EstadoAnimal.id).limit(1)
+    ).first()
+
+
+def listar_estados(db: Session, animal: Animal, *, page: int = 1, page_size: int = 20) -> dict:
+    """Historial en orden cronológico (fecha efectiva, luego id). Nunca se edita ni se borra."""
+    donde = EstadoAnimal.animal_id == animal.id
+    total = db.scalar(select(func.count()).select_from(EstadoAnimal).where(donde))
+    filas = db.scalars(
+        select(EstadoAnimal).where(donde).order_by(EstadoAnimal.fecha_desde, EstadoAnimal.id)
+        .offset((page - 1) * page_size).limit(page_size)
+    ).all()
+    return {"items": [estado_publico(e) for e in filas], "total": total, "page": page, "page_size": page_size}
 
 def obtener_animal(db: Session, animal_id: int) -> Animal:
     animal = db.get(Animal, animal_id)
@@ -155,8 +172,8 @@ def cambiar_estado(db: Session, actor: Usuario, animal_id: int, *, estado: str, 
                    motivo: str | None, version: int) -> tuple[EstadoAnimal, Animal]:
     animal = obtener_animal(db, animal_id)
     errores = {}
-    if estado not in ESTADOS_SELECCIONABLES:
-        errores["estado"] = "Usa en_produccion, seco o no_productivo."
+    if estado not in ESTADOS_ANIMAL:
+        errores["estado"] = MENSAJE_ESTADOS
     if animal.fecha_ingreso is not None and fecha_desde < animal.fecha_ingreso:
         errores["fecha_desde"] = "No puede ser anterior a la fecha de ingreso."
     elif fecha_desde > hoy():
@@ -173,17 +190,26 @@ def cambiar_estado(db: Session, actor: Usuario, animal_id: int, *, estado: str, 
     if db.scalar(select(EstadoAnimal.id).where(EstadoAnimal.animal_id == animal.id,
                                                EstadoAnimal.fecha_desde == fecha_desde)):
         raise _cambio_diario_duplicado()
-    vigente = _estado_en(db, animal.id, fecha_desde)
+    vigente = estado_en(db, animal.id, fecha_desde)
     if vigente is not None and vigente.estado == estado:
         raise ErrorApi(422, "VALIDACION", "Revisa los campos indicados.",
                        {"estado": "El animal ya está en ese estado en esa fecha."})
-    if estado != "en_produccion" and db.scalar(
-        select(Ordeno.id).where(Ordeno.animal_id == animal.id, Ordeno.anulado.is_(False),
-                                Ordeno.fecha >= fecha_desde).limit(1)
-    ):
-        raise ErrorApi(409, "ESTADO_INCOMPATIBLE",
-                       "Hay ordeños vigentes desde esa fecha; el animal no puede quedar en ese estado.",
-                       {"estado": "Anula o corrige los ordeños antes de cambiar el estado."})
+
+    siguiente = _siguiente_estado(db, animal.id, fecha_desde)
+    if estado == "fuera_del_hato" and siguiente is not None:
+        raise ErrorApi(409, "ESTADO_INCOMPATIBLE", "La salida del hato debe ser el último cambio del animal.",
+                       {"fecha_desde": "Hay cambios de estado posteriores a esa fecha."})
+    if estado != "en_produccion":
+        # El nuevo estado rige desde fecha_desde hasta el siguiente cambio (si existe): solo los
+        # ordeños vigentes (no anulados) de ese tramo lo contradicen.
+        ordenos = select(Ordeno.id).where(Ordeno.animal_id == animal.id, Ordeno.anulado.is_(False),
+                                          Ordeno.fecha >= fecha_desde)
+        if siguiente is not None:
+            ordenos = ordenos.where(Ordeno.fecha < siguiente.fecha_desde)
+        if db.scalar(ordenos.limit(1)):
+            raise ErrorApi(409, "ESTADO_INCOMPATIBLE",
+                           "Hay ordeños vigentes en ese período; el animal no puede quedar en ese estado.",
+                           {"estado": "Anula o corrige los ordeños antes de cambiar el estado."})
 
     antes = {"estado": vigente.estado if vigente else None, "version": animal.version}
     despues = {"estado": estado, "fecha_desde": fecha_desde.isoformat(), "version": animal.version + 1}

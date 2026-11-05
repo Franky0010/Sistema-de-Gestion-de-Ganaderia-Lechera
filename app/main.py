@@ -21,6 +21,7 @@ async def lifespan(_app: FastAPI):
     migraciones.migrar(engine)  # lleva una base existente al esquema actual
     Base.metadata.create_all(engine)
     auditoria.proteger_auditoria(engine)  # triggers: la auditoría no se edita ni se borra
+    migraciones.proteger_historial(engine)  # triggers: el historial de estados solo crece
     yield
 
 

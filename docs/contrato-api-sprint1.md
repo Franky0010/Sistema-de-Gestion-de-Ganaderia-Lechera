@@ -1,18 +1,20 @@
 # Contrato API — Sprint 1
 
-**Estado: implementado en el backend para sesión/CSRF, usuarios, auditoría y registro y estados de animales; pendiente de aprobación del equipo. Falta `GET /animales` (lista, PB-04).**
+**Estado: implementado en el backend para sesión/CSRF, usuarios, auditoría y registro, estados e historial de animales; pendiente de aprobación del equipo. Faltan `GET /animales` (lista) y la validación estado-ordeño del lado del registro de ordeños (PB-07).**
 Vinculado a PB-01, PB-02, PB-03, PB-04, PB-11, HT-01 y HT-02.
 
 ### Estado de implementación (backend)
 
-| Bloque                                                                          | Estado                                              | Código                                                 |
-| ------------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------ |
-| Sesión y CSRF                                                                   | Implementado                                        | `rutas_auth.py`, `servicio_auth.py`, `dependencias.py` |
-| Usuarios                                                                        | Implementado (incluye `motivo` al cambiar `activo`) | `rutas_usuarios.py`, `servicio_usuarios.py`            |
-| Auditoría (consulta y protección)                                               | Implementado                                        | `auditoria.py`, `rutas_auditoria.py`                   |
-| Animales: `POST /animales`, `GET /animales/{id}`, `POST /animales/{id}/estados` | Implementado                                        | `rutas_animales.py`, `servicio_animales.py`            |
-| Animales: `GET /animales` (lista, búsqueda, filtro por estado)                  | **Pendiente** (PB-04)                               | —                                                      |
-| Respaldo y restauración                                                         | Implementado (script)                               | `respaldo.py`                                          |
+| Bloque                                                                                       | Estado                                                                                                          | Código                                                 |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Sesión y CSRF                                                                                | Implementado                                                                                                    | `rutas_auth.py`, `servicio_auth.py`, `dependencias.py` |
+| Usuarios                                                                                     | Implementado (incluye `motivo` al cambiar `activo`)                                                             | `rutas_usuarios.py`, `servicio_usuarios.py`            |
+| Auditoría (consulta y protección)                                                            | Implementado                                                                                                    | `auditoria.py`, `rutas_auditoria.py`                   |
+| Animales: `POST /animales`, `GET /animales/{id}`, `POST /animales/{id}/estados`              | Implementado                                                                                                    | `rutas_animales.py`, `servicio_animales.py`            |
+| Animales: `GET /animales/{id}/estados` (historial de estados)                                | Implementado                                                                                                    | `rutas_animales.py`, `servicio_animales.py`            |
+| Animales: `GET /animales` (lista, búsqueda, filtro por estado)                               | **Pendiente**                                                                                                   | —                                                      |
+| Ordeños: rechazar el registro de un ordeño si el animal no está `en_produccion` en esa fecha | **Pendiente: integración con PB-07.** `POST /ordenos` (PoC) aún no consulta el estado. Ver «Ordeños y estados». | prueba `xfail` en `tests/test_animales.py`             |
+| Respaldo y restauración                                                                      | Implementado (script)                                                                                           | `respaldo.py`                                          |
 
 ## Responsables según las subtareas de GitHub
 
@@ -109,9 +111,10 @@ Reglas:
 
 | Método/ruta                                         | Acceso        | Entrada y resultado                                                                                                                                                                                                 |
 | --------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GET `/animales?search=&estado=&page=1&page_size=20` | Tres roles    | **Pendiente (PB-04).** Lista paginada de Animal. Buscar por arete/nombre y filtrar por estado vigente.                                                                                                              |
+| GET `/animales?search=&estado=&page=1&page_size=20` | Tres roles    | **Pendiente.** Lista paginada de Animal. Buscar por arete/nombre y filtrar por estado vigente.                                                                                                                      |
 | GET `/animales/{id}`                                | Tres roles    | 200 Animal con estado vigente y versión; soporte mínimo al formulario de estados                                                                                                                                    |
 | POST `/animales`                                    | Administrador | AnimalNuevo → 201 Animal. En una sola transacción crea el animal, su estado inicial (con `fecha_desde` igual a `fecha_ingreso` y motivo automático «Estado inicial al registrar el animal») y la auditoría `crear`. |
+| GET `/animales/{id}/estados?page=1&page_size=20`    | Tres roles    | 200 `{ "items": [Estado], "total": 3, "page": 1, "page_size": 20 }`. Historial en orden cronológico por `fecha_desde` (luego por id), no por orden de llegada. Incluye el estado inicial.                           |
 | POST `/animales/{id}/estados`                       | Administrador | CambioEstado → 201 `{ "estado": Estado, "animal": Animal }`                                                                                                                                                         |
 
 AnimalNuevo:
@@ -148,23 +151,36 @@ CambioEstado:
 
 Estado público: `{ "id": 12, "animal_id": 25, "estado": "seco", "fecha_desde": "2026-11-02", "motivo": "...", "responsable_id": 1 }`.
 
-Motivo obligatorio (máx. 500); fecha desde ingreso hasta hoy. Un cambio por animal y día, incluido el estado inicial. Rechazar animales ya retirados, estados iguales al vigente en esa fecha, conflictos con ordeños vigentes y escrituras con versión obsoleta. Comparación/actualización de `version`, inserción del estado y auditoría en una sola transacción; incrementar versión en cada cambio. `fuera_del_hato` se muestra como estado existente, pero la UI de este sprint no permite seleccionarlo: PB-06 requiere tipo de salida y reglas adicionales. La API rechaza `fuera_del_hato` como destino con 422 en el campo `estado`.
+Motivo obligatorio (máx. 500); fecha desde ingreso hasta hoy. Un cambio por animal y día, incluido el estado inicial. Rechazar animales ya retirados, estados iguales al vigente en esa fecha, conflictos con ordeños vigentes y escrituras con versión obsoleta. Comparación/actualización de `version`, inserción del estado y auditoría en una sola transacción; incrementar versión en cada cambio. Estados permitidos en un cambio: `en_produccion`, `seco`, `no_productivo` y `fuera_del_hato`. La UI de este sprint no ofrece `fuera_del_hato`, porque PB-06 añadirá el tipo de salida y reglas adicionales; el backend ya lo admite como cambio (con motivo) y **a confirmar con el Product Owner** que no se use hasta PB-06. Un alta con `estado_inicial` `fuera_del_hato` sigue rechazada (422). Salir del hato debe ser el último cambio del animal.
 
 Respuestas de `POST /animales/{id}/estados`:
 
-| Caso                                                                                             | Respuesta                             |
-| ------------------------------------------------------------------------------------------------ | ------------------------------------- |
-| Animal inexistente                                                                               | 404 `NO_ENCONTRADO`                   |
-| Estado no permitido, fecha anterior al ingreso o futura, motivo vacío o de más de 500 caracteres | 422 `VALIDACION`, por campo           |
-| Estado igual al vigente en esa fecha                                                             | 422 `VALIDACION` en el campo `estado` |
-| `version` distinta de la actual (o cambiada por otra persona durante la petición)                | 409 `VERSION_OBSOLETA`                |
-| Ya existe un cambio de estado ese día, incluido el inicial                                       | 409 `CAMBIO_DIARIO_DUPLICADO`         |
-| Animal ya retirado (`fuera_del_hato`)                                                            | 409 `ESTADO_INCOMPATIBLE`             |
-| Pasar a `seco` o `no_productivo` con ordeños **vigentes** (no anulados) desde esa fecha          | 409 `ESTADO_INCOMPATIBLE`             |
+| Caso                                                                                                                                                                                                                                                            | Respuesta                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Animal inexistente                                                                                                                                                                                                                                              | 404 `NO_ENCONTRADO`                            |
+| Estado no permitido, fecha anterior al ingreso o futura, motivo vacío o de más de 500 caracteres                                                                                                                                                                | 422 `VALIDACION`, por campo                    |
+| Estado igual al vigente en esa fecha                                                                                                                                                                                                                            | 422 `VALIDACION` en el campo `estado`          |
+| `version` distinta de la actual (o cambiada por otra persona durante la petición)                                                                                                                                                                               | 409 `VERSION_OBSOLETA`                         |
+| Ya existe un cambio de estado ese día, incluido el inicial                                                                                                                                                                                                      | 409 `CAMBIO_DIARIO_DUPLICADO`                  |
+| Animal ya retirado (`fuera_del_hato`)                                                                                                                                                                                                                           | 409 `ESTADO_INCOMPATIBLE`                      |
+| Pasar a `seco`, `no_productivo` o `fuera_del_hato` con ordeños **vigentes** (no anulados) en el tramo que regiría el nuevo estado: desde `fecha_desde` hasta el siguiente cambio de estado (sin límite si no hay siguiente). El mismo día cuenta como conflicto | 409 `ESTADO_INCOMPATIBLE`                      |
+| `fuera_del_hato` con cambios de estado posteriores a esa fecha                                                                                                                                                                                                  | 409 `ESTADO_INCOMPATIBLE`, campo `fecha_desde` |
 
 La comparación de `version` y su incremento se hacen en una sola sentencia (`UPDATE ... WHERE version = :version`). Si la auditoría o cualquier paso falla antes del commit, la versión, el estado y la auditoría quedan sin cambios.
 
-La ficha/historial completo PB-05 y los ordeños no se implementan aquí. GET animales es soporte mínimo para seleccionar un animal y cambiar su estado. La validación de incompatibilidad debe probarse con datos de ordeño reales o fixtures de backend; el simulador visual no la acredita.
+La ficha completa PB-05 y el registro de ordeños no se implementan aquí; `GET /animales/{id}/estados` es el historial mínimo que permite comprobar PB-04. El historial solo crece: la API no ofrece PUT, PATCH ni DELETE (405) y triggers de la base abortan cualquier UPDATE o DELETE sobre `estado_animal`. GET animales es soporte mínimo para seleccionar un animal y cambiar su estado. La validación de incompatibilidad debe probarse con datos de ordeño reales o fixtures de backend; el simulador visual no la acredita.
+
+## Ordeños y estados — acuerdo mínimo con PB-07
+
+PB-04 solo necesita tres datos de cada ordeño: `animal_id`, `fecha` (fecha de negocio) y `anulado`. Un ordeño es **vigente** si `anulado` es falso. Un ordeño anulado no bloquea ningún cambio de estado. Los ordeños siguen siendo del PoC (`POST /ordenos`, tabla `ordeno`); su contrato completo se define en PB-07.
+
+| Sentido                     | Regla                                                                                                                                                              | Estado                                                                                                                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Estado → ordeños            | No se puede poner un animal en `seco`, `no_productivo` o `fuera_del_hato` si tiene ordeños vigentes en el tramo que regiría ese estado (409 `ESTADO_INCOMPATIBLE`) | **Implementado y probado** con ordeños de fixture y con uno registrado por el `POST /ordenos` del PoC                                                                                                                                              |
+| Ordeños → estado            | No se puede registrar un ordeño de un animal cuyo estado en esa fecha no sea `en_produccion`                                                                       | **Pendiente (PB-07).** Hoy `POST /ordenos` lo acepta. Al implementarlo, PB-07 debe usar `servicio_animales.estado_en(db, animal_id, fecha)` y quitar la marca `xfail` de la prueba correspondiente (está en `strict`: fallará hasta que se retire) |
+| Anular o corregir un ordeño | Habilita de nuevo el cambio de estado bloqueado                                                                                                                    | **Pendiente (PB-07/PB-08).** Mientras no exista el endpoint, las pruebas anulan el ordeño directamente en la base                                                                                                                                  |
+
+La integración entre ambos módulos **queda pendiente** hasta PB-07; esta actividad solo verifica el lado estado → ordeños.
 
 ## Errores compartidos
 

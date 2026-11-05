@@ -62,6 +62,22 @@ def migrar(engine: Engine) -> bool:
     return True
 
 
+_TRIGGERS_HISTORIAL = (
+    """CREATE TRIGGER IF NOT EXISTS estado_animal_sin_update BEFORE UPDATE ON estado_animal
+       BEGIN SELECT RAISE(ABORT, 'El historial de estados no se puede modificar'); END""",
+    """CREATE TRIGGER IF NOT EXISTS estado_animal_sin_delete BEFORE DELETE ON estado_animal
+       BEGIN SELECT RAISE(ABORT, 'El historial de estados no se puede borrar'); END""",
+)
+
+
+def proteger_historial(engine: Engine) -> None:
+    """El historial de estados solo crece: la base impide UPDATE y DELETE (PB-04). Idempotente;
+    se llama después de create_all, porque la tabla debe existir."""
+    with engine.begin() as conexion:
+        for sentencia in _TRIGGERS_HISTORIAL:
+            conexion.exec_driver_sql(sentencia)
+
+
 if __name__ == "__main__":
     from .db_deps import engine
 
