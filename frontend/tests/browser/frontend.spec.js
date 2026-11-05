@@ -6,7 +6,7 @@ async function login(page,role='Administrador') {
   await page.goto('./');
   await page.getByRole('button',{name:role,exact:true}).click();
   await page.getByRole('button',{name:'Iniciar sesión',exact:true}).click();
-  await expect(page.getByRole('heading',{name:'El hato, en orden'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Animales',exact:true})).toBeVisible();
 }
 test('login: errores, contraseña visible, cuenta inactiva y logout',async({page})=>{
   await page.goto('./');
@@ -53,7 +53,7 @@ test('animales: registro, duplicado preserva datos y cambio de estado',async({pa
 test('usuarios: crear, editar, desactivar y conservar cuenta histórica',async({page})=>{
   await login(page);
   await page.getByRole('link',{name:'Usuarios',exact:true}).click();
-  await expect(page.getByRole('heading',{name:'Personas y permisos'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Usuarios',exact:true})).toBeVisible();
   await page.screenshot({path:`${captures}/users.png`,fullPage:true});
   await page.getByRole('link',{name:'Crear usuario',exact:true}).click();
   await page.getByLabel('Nombre completo',{exact:false}).fill('Persona Prueba');
@@ -135,7 +135,7 @@ test('API real simulada: CSRF/login, error 409 por campo y sesión vencida',asyn
   await page.getByLabel('Correo electrónico').fill('ana@finca.co');
   await page.getByLabel('Contraseña',{exact:false}).fill('demo-password');
   await page.getByRole('button',{name:'Iniciar sesión'}).click();
-  await expect(page.getByRole('heading',{name:'El hato, en orden'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Animales',exact:true})).toBeVisible();
   expect(writes[0].csrf).toBe('test-csrf');
   await page.getByRole('link',{name:'Registrar animal'}).click();
   await page.getByLabel('Arete',{exact:false}).fill('V-1');

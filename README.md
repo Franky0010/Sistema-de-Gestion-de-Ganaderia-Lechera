@@ -4,7 +4,9 @@ Proyecto académico de **IS873 — Laboratorio de Software**, Universidad Tecnol
 
 Aplicación web propuesta para centralizar la información de los animales, registrar ordeños y facilitar el seguimiento de la producción de una finca lechera. Busca reemplazar la consolidación manual de cuadernos y hojas de cálculo por registros consistentes, permisos por rol, historial e indicadores verificables.
 
-**Estado actual:** el repositorio contiene el PoC de ordeños y un frontend inicial del sprint 1 (acceso, usuarios, permisos visuales, animales y estados), con demo aislada y adaptador de API. La autenticación y los endpoints completos del sprint 1 siguen pendientes de implementación en backend. El frontend no acredita por sí solo esos requisitos del MVP.
+**Estado actual:** frontend del sprint 1 rediseñado, con acceso y administración de usuarios integrados al backend de Franky. Se comprobaron login/logout, persistencia y expiración de sesión, creación, edición y desactivación de usuarios, correo duplicado y campos obligatorios. Las rutas versionadas de animales y estados siguen pendientes del backend de Juan Manuel; sus pantallas se pueden recorrer en la demo.
+
+El diseño combina acceso con paisaje y formulario, navegación lateral carbón y tablas compactas. Usa SVG locales de Google Material Symbols. Se revisaron las pantallas en anchos de 320, 390, 768, 1280 y 1440 px. El paisaje es una imagen decorativa generada, con procedencia incluida en sus archivos.
 
 Para probar la interfaz: `cd frontend`, `npm ci`, `npm run demo`; abrir `http://127.0.0.1:5173/ui/`. Ver [guía del frontend](frontend/README.md) y [propuesta de contrato API para el equipo](docs/contrato-api-sprint1.md).
 
@@ -32,6 +34,10 @@ Para probar la interfaz: `cd frontend`, `npm ci`, `npm run demo`; abrir `http://
 | [Planteamiento y diseño](docs/planteamiento-y-diseno.md) | Problema, objetivos, RF01–RF13, RNF01–RNF10, casos de uso, arquitectura, modelo de datos y mockups. |
 | [Product Backlog](docs/product-backlog.md) | 17 historias funcionales y 5 historias técnicas, criterios de aceptación, prioridades, estimaciones, dependencias y propuesta de sprints. |
 | [Prueba de concepto](docs/POC.md) | Riesgo técnico evaluado, procedimiento, resultados y limitaciones de concurrencia y atomicidad. |
+| [Frontend](frontend/README.md) | Demo, rutas, pruebas y compilación. |
+| [Contrato de API](docs/contrato-api-sprint1.md) | Endpoints y responsables de implementación. |
+| [Backend de acceso](docs/backend-acceso.md) | Sesiones, usuarios y configuración. |
+| [Sistema visual](DESIGN.md) | Diseño aprobado, componentes y adaptación móvil. |
 
 Las versiones Markdown se pueden leer directamente en GitHub e incluyen índices navegables y las imágenes del diseño. Los archivos Word se conservan tal como fueron entregados y están enlazados al inicio de cada documento para su descarga. El planteamiento todavía describe la ejecución del PoC como pendiente; el código y su informe reflejan el avance posterior. Las estimaciones y la distribución de sprints del backlog son propuestas sujetas a refinamiento.
 
@@ -47,8 +53,8 @@ El MVP contempla captura manual en línea y dos turnos diarios: mañana y tarde.
 
 | Requisito | Funcionalidad prevista | Estado actual |
 |---|---|---|
-| RF01 | Cuentas, acceso con correo y contraseña, cierre y expiración de sesión. | Pendiente. |
-| RF02 | Registro de animales, identificación única y estados con fecha efectiva. | Parcial: alta mínima con arete y nombre opcional. |
+| RF01 | Cuentas, acceso con correo y contraseña, cierre y expiración de sesión. | Implementado e integrado con el frontend; revisión del equipo pendiente. |
+| RF02 | Registro de animales, identificación única y estados con fecha efectiva. | Frontend y demo disponibles; backend versionado pendiente. Se conserva el alta mínima del PoC. |
 | RF03 | Consulta de ficha e historial del animal. | Pendiente. |
 | RF04 | Registro de producción y descarte por animal, fecha y turno. | Parcial: API del PoC sin sesión real ni validación de estado productivo. |
 | RF05 | Validación de cantidades, fechas, estados y duplicados concurrentes. | Parcial: cantidades, turno y unicidad implementados; faltan reglas de fecha y estado. |
@@ -57,7 +63,7 @@ El MVP contempla captura manual en línea y dos turnos diarios: mañana y tarde.
 | RF08 | Promedio diario y cobertura de turnos. | Pendiente. |
 | RF09 | Reportes filtrados dentro de la aplicación. | Pendiente. |
 | RF10 | Corrección, anulación y reactivación con motivo y control de versión. | Pendiente; el PoC registra auditoría de creación. |
-| RF11 | Autorización en el servidor según el rol vigente. | Pendiente. |
+| RF11 | Autorización en el servidor según el rol vigente. | Implementada para sesión y usuarios; extensión a animales y ordeños pendiente. |
 | RF12 | Salidas del rebaño conservando el historial. | Pendiente. |
 | RF13 | Alertas internas por disminución de producción y umbral configurable. | Pendiente. |
 
@@ -69,7 +75,7 @@ Quedan fuera de esta entrega sensores, funcionamiento sin conexión, múltiples 
 
 ## Roles
 
-Estos permisos son el objetivo del MVP; el PoC aún no los aplica.
+Estos permisos describen el objetivo del MVP. La API versionada de usuarios exige Administrador; las rutas antiguas del PoC conservan su alcance experimental.
 
 | Rol | Permisos previstos |
 |---|---|
@@ -107,16 +113,16 @@ El diseño propone una aplicación cliente-servidor con API REST y persistencia 
 
 | Componente | Tecnología | Situación |
 |---|---|---|
-| Interfaz | HTML, Tailwind CSS y JavaScript | Sprint 1 con demo local y adaptador API; integración real pendiente. |
-| API | Python y FastAPI | Implementada de forma mínima para el PoC. |
+| Interfaz | HTML, Tailwind CSS y JavaScript con Vite | Rediseño adaptable; sesión y usuarios integrados; animales disponibles en demo. |
+| API | Python y FastAPI | Sesión y usuarios en /api/v1, más rutas del PoC. |
 | Validación | Pydantic y servicios de negocio | Implementación parcial. |
-| Persistencia | SQLAlchemy y SQLite | Implementada en el PoC. |
+| Persistencia | SQLAlchemy y SQLite | Usuarios, sesiones, auditoría y datos del PoC. |
 | Servidor local | Uvicorn | Disponible mediante las dependencias. |
-| Pruebas | pytest y httpx | Suite del PoC y regresiones. |
+| Pruebas | pytest, httpx, Node y Playwright | Backend, validaciones del cliente y flujos de navegador. |
 
 La arquitectura objetivo separa rutas y esquemas, servicios de negocio y repositorios. Actualmente los servicios acceden a SQLAlchemy directamente; la capa de repositorios es trabajo pendiente.
 
-El modelo completo contempla usuarios, animales, estados, ordeños, auditoría e información para alertas y umbrales. El PoC solo define Animal, Ordeno y Auditoria.
+El modelo completo contempla usuarios, animales, estados, ordeños, auditoría e información para alertas y umbrales. El código actual define Usuario, Sesion, Animal, Ordeno y Auditoria.
 
 SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL se evaluará si las pruebas de carga evidencian limitaciones. El despliegue del MVP deberá incorporar HTTPS, secretos fuera del repositorio, almacenamiento persistente y respaldo/restauración documentados.
 
@@ -127,10 +133,21 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 ├── app/
 │   ├── __init__.py
 │   ├── database.py       # SQLite, PRAGMA y sesiones
-│   ├── main.py           # API mínima y esquemas de entrada
-│   ├── models.py         # Animal, Ordeno y Auditoria
+│   ├── main.py           # API versionada y rutas del PoC
+│   ├── rutas_auth.py     # Login, logout, CSRF y sesión
+│   ├── rutas_usuarios.py # Administración de cuentas
+│   ├── seguridad.py     # Contraseñas, CSRF y límites de acceso
+│   ├── models.py         # Usuarios, sesiones, animales, ordeños y auditoría
 │   └── service.py        # Validaciones y transacción de ordeño/auditoría
+├── frontend/            # Vite, HTML, Tailwind CSS y JavaScript
+│   ├── src/views.js     # Pantallas y formularios
+│   ├── src/styles.css   # Diseño adaptable
+│   ├── src/api.js       # Cliente de /api/v1
+│   ├── src/assets/      # Paisaje e iconos locales
+│   └── tests/           # Pruebas unitarias y de navegador
 ├── docs/
+│   ├── contrato-api-sprint1.md
+│   ├── backend-acceso.md
 │   ├── assets/planteamiento-y-diseno/  # Diagramas y mockups
 │   ├── POC.md
 │   ├── planteamiento-y-diseno.md
@@ -139,7 +156,10 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 │   └── product-backlog.docx
 ├── tests/
 │   ├── __init__.py
-│   └── test_poc.py
+│   ├── test_poc.py
+│   ├── test_auth.py
+│   ├── test_seguridad.py
+│   └── test_usuarios.py
 ├── .gitignore
 ├── pytest.ini
 ├── requirements.txt     # Dependencias fijadas
@@ -148,12 +168,13 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 
 ## Instalación y ejecución
 
-Estas instrucciones ejecutan el backend del PoC. Para la pantalla de acceso y los formularios nuevos, seguir la [guía del frontend](frontend/README.md); las APIs de autenticación y gestión todavía deben implementarse.
+Estas instrucciones permiten ejecutar el frontend con la API y una base SQLite local.
 
 ### Requisitos
 
 - Git.
-- Python **3.13** recomendado para reproducir el entorno de pruebas verificado.
+- Python 3.11 o posterior; la integración se verificó en Windows con Python 3.11.
+- Node.js 22.12 o posterior y npm.
 - Acceso a Internet para instalar dependencias.
 
 ```bash
@@ -166,17 +187,37 @@ Windows PowerShell, sin necesidad de activar scripts:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+$env:POC_DATABASE_URL = 'sqlite:///login-pruebas.db'
+$env:POC_ORIGENES_PERMITIDOS = 'http://localhost:5187'
+.\.venv\Scripts\python.exe -m app.crear_admin --email admin@finca.co --nombre 'Admin de prueba'
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
 Linux o macOS:
 
 ```bash
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python -m uvicorn app.main:app --reload
+export POC_DATABASE_URL=sqlite:///login-pruebas.db
+export POC_ORIGENES_PERMITIDOS=http://localhost:5187
+.venv/bin/python -m app.crear_admin --email admin@finca.co --nombre 'Admin de prueba'
+.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Abrir [Swagger UI](http://127.0.0.1:8000/docs) o [OpenAPI JSON](http://127.0.0.1:8000/openapi.json). El modo `--reload` es para desarrollo.
+La contraseña se solicita por consola (8 a 128 caracteres). Crear el administrador es un paso inicial; en arranques posteriores se reutiliza la cuenta. El entorno virtual dentro del repositorio evita la redirección de AppData de Python de Microsoft Store.
+
+En otra terminal, desde la raíz del repositorio:
+
+```powershell
+cd frontend
+npm.cmd ci
+npm.cmd run dev -- --host localhost --port 5187
+```
+
+En Linux/macOS usar `npm` en lugar de `npm.cmd`. Abrir [el frontend](http://localhost:5187/ui/) y entrar con la cuenta creada. Mantener `localhost` en la URL para que coincida con el origen permitido. Vite redirige `/api` a `http://127.0.0.1:8000`.
+
+Después del acceso se abre Animales. Mientras falta `GET /api/v1/animales`, esa pantalla muestra un error de carga; **Usuarios** permite probar las funciones ya integradas.
+
+También están disponibles [Swagger UI](http://127.0.0.1:8000/docs) y [OpenAPI JSON](http://127.0.0.1:8000/openapi.json).
 
 ### Base de datos
 
@@ -191,18 +232,30 @@ $env:POC_DATABASE_URL = "sqlite:///poc-local.db"
 POC_DATABASE_URL=sqlite:///poc-local.db .venv/bin/python -m uvicorn app.main:app --reload
 ```
 
+Los comandos de inicio anteriores utilizan `login-pruebas.db`, conservando las cuentas entre arranques. Cada integrante tiene su propia base local. Para ensayar un esquema nuevo, elegir un archivo nuevo y conservar el anterior; aún no hay migraciones automáticas. Git ignora las bases locales, los entornos virtuales y cualquier carpeta `.impeccable/`.
+
 La configuración es específica de SQLite; cambiar la URL no implementa por sí solo compatibilidad con PostgreSQL.
 
 ## API disponible
 
 | Método | Ruta | Uso |
 |---|---|---|
+| GET | /api/v1/auth/csrf | Obtener token CSRF para escrituras. |
+| GET | /api/v1/auth/session | Consultar el usuario de la sesión vigente. |
+| POST | /api/v1/auth/login | Iniciar sesión mediante cookie. |
+| POST | /api/v1/auth/logout | Revocar sesión y borrar cookie. |
+| GET | /api/v1/usuarios | Lista paginada y búsqueda (Administrador). |
+| GET | /api/v1/usuarios/{id} | Consultar una cuenta (Administrador). |
+| POST | /api/v1/usuarios | Crear una cuenta (Administrador). |
+| PATCH | /api/v1/usuarios/{id} | Editar datos, rol o estado activo (Administrador). |
 | POST | /animales | Crear un animal con arete y nombre opcional. |
 | POST | /ordenos | Registrar un ordeño y su auditoría. |
 | GET | /docs | Documentación interactiva. |
 | GET | /openapi.json | Esquema OpenAPI. |
 
-En Swagger UI, ejecutar primero `POST /animales`:
+Las escrituras versionadas requieren `X-CSRF-Token`; el frontend lo obtiene antes de cada envío. El [contrato](docs/contrato-api-sprint1.md) detalla entradas, respuestas y errores.
+
+Para probar las rutas antiguas del PoC en Swagger UI, ejecutar primero `POST /animales`:
 
 ```json
 {"arete": "V-001", "nombre": "Luna"}
@@ -234,6 +287,18 @@ La respuesta válida es `201`, con producción, descarte y disponibilidad. Repet
 | 503 | Bloqueo de SQLite que persiste tras la espera acotada al registrar ordeños. |
 
 ## Pruebas
+
+El rediseño pasó 6 pruebas unitarias del cliente y 7 pruebas Playwright. Se comprobaron además los flujos de sesión y usuarios contra el backend real con una base temporal, incluidos campos obligatorios, correo duplicado, desactivación y expiración. La revisión visual cubrió cinco anchos entre 320 y 1440 px.
+
+Desde `frontend/`:
+
+```powershell
+npm.cmd test
+npm.cmd run test:e2e
+npm.cmd run build
+```
+
+Playwright usa Chrome o Edge instalados en Windows y levanta servidores en 5173/5174. En otros entornos instalar Chromium con `npx playwright install chromium`. La suite del navegador usa demo y respuestas interceptadas; la comprobación integrada con el backend real se realizó por separado.
 
 Desde la raíz del repositorio, en Windows:
 
