@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from . import rutas_auth, rutas_usuarios, service
+from . import auditoria, rutas_animales, rutas_auditoria, rutas_auth, rutas_usuarios, service
 from .db_deps import SessionLocal, engine, get_session  # noqa: F401  (get_session se reexporta)
 from .errores import instalar_manejadores
 from .models import Animal, Base
@@ -19,6 +19,7 @@ from .models import Animal, Base
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     Base.metadata.create_all(engine)
+    auditoria.proteger_auditoria(engine)  # triggers: la auditoría no se edita ni se borra
     yield
 
 
@@ -26,6 +27,8 @@ app = FastAPI(title="PoC - Registro de ordeños sin duplicados", lifespan=lifesp
 instalar_manejadores(app)
 app.include_router(rutas_auth.router, prefix="/api/v1")
 app.include_router(rutas_usuarios.router, prefix="/api/v1")
+app.include_router(rutas_auditoria.router, prefix="/api/v1")
+app.include_router(rutas_animales.router, prefix="/api/v1")
 
 
 class AnimalIn(BaseModel):
