@@ -15,6 +15,15 @@ todos_los_roles = dependencias.requiere("administrador", "operario", "propietari
 solo_admin_escribe = dependencias.requiere("administrador", escritura=True)
 
 
+@router.get("")
+def listar(search: str = Query("", max_length=160), estado: str = Query("", max_length=40),
+           page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=100),
+           _ctx=Depends(todos_los_roles), db: Session = Depends(get_session)):
+    """Return the paginated herd for every authenticated application role."""
+    return servicio_animales.listar_animales(db, search=search, estado=estado,
+                                             page=page, page_size=page_size)
+
+
 class AnimalNuevo(BaseModel):
     model_config = ConfigDict(extra="forbid")
     arete: str
