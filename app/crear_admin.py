@@ -8,7 +8,7 @@ import getpass
 import os
 import sys
 
-from . import servicio_usuarios
+from . import auditoria, servicio_usuarios
 from .db_deps import SessionLocal, engine
 from .errores import ErrorApi
 from .models import Base
@@ -28,6 +28,7 @@ def main(argv=None) -> int:
             return 1
 
     Base.metadata.create_all(engine)
+    auditoria.proteger_auditoria(engine)
     with SessionLocal() as db:
         try:
             usuario = servicio_usuarios.crear_usuario(
@@ -36,6 +37,7 @@ def main(argv=None) -> int:
             print(f"No se creó el administrador: {error.message} {error.fields}")
             return 1
     print(f"Administrador creado: {usuario.email}")
+
     return 0
 
 

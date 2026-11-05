@@ -92,7 +92,7 @@ def test_patch_rechaza_vacio_nulos_y_campos_no_permitidos(api):
 def test_desactivar_revoca_sesiones_y_conserva_el_historial(api):
     operario = cliente_con_sesion(api, "operario")
     admin = cliente_con_sesion(api, "admin")
-    assert escribir(admin, "PATCH", "/api/v1/usuarios/2", {"activo": False}).status_code == 200
+    assert escribir(admin, "PATCH", "/api/v1/usuarios/2", {"activo": False, "motivo": "Prueba"}).status_code == 200
     assert operario.get("/api/v1/auth/session").status_code == 401
     assert api.contar(Usuario, Usuario.id == 2) == 1  # el usuario sigue existiendo
     assert api.consultar(select(Auditoria.accion).where(Auditoria.entidad_id == 2))[-1] == "desactivar"
@@ -101,7 +101,7 @@ def test_desactivar_revoca_sesiones_y_conserva_el_historial(api):
 
 def test_no_se_puede_dejar_el_sistema_sin_administrador_activo(api):
     admin = cliente_con_sesion(api, "admin")
-    for cuerpo in [{"activo": False}, {"rol": "operario"}]:
+    for cuerpo in [{"activo": False, "motivo": "Prueba"}, {"rol": "operario"}]:
         r = escribir(admin, "PATCH", "/api/v1/usuarios/1", cuerpo)
         assert (r.status_code, r.json()["error"]["code"]) == (409, "ULTIMO_ADMINISTRADOR")
     assert api.filas(select(Usuario.activo, Usuario.rol).where(Usuario.id == 1)) == [(True, "administrador")]

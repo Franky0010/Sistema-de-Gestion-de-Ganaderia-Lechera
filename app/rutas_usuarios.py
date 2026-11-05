@@ -32,6 +32,7 @@ class UsuarioCambio(BaseModel):
     email: Optional[str] = None
     rol: Optional[str] = None
     activo: Optional[StrictBool] = None
+    motivo: Optional[str] = None  # obligatorio si se cambia 'activo' (RNF07)   ← nuevo
 
 
 @router.get("")
@@ -60,8 +61,9 @@ def crear(datos: UsuarioNuevo, ctx=Depends(solo_admin_escribe), db: Session = De
 @router.patch("/{usuario_id}")
 def actualizar(usuario_id: int, datos: UsuarioCambio, ctx=Depends(solo_admin_escribe),
                db: Session = Depends(get_session)):
-    cambios = {k: getattr(datos, k) for k in datos.model_fields_set}
+    cambios = {k: getattr(datos, k) for k in datos.model_fields_set if k != "motivo"}
     if not cambios or any(v is None for v in cambios.values()):
         raise ErrorApi(422, "VALIDACION", "Indica al menos un campo válido para actualizar.",
                        {"cuerpo": "Envía nombre, email, rol o activo con un valor."})
-    return usuario_publico(servicio_usuarios.actualizar_usuario(db, ctx.usuario, usuario_id, cambios))
+    return usuario_publico(servicio_usuarios.actualizar_usuario(
+        db, ctx.usuario, usuario_id, cambios, datos.motivo))
