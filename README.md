@@ -4,11 +4,13 @@ Proyecto académico de **IS873 — Laboratorio de Software**, Universidad Tecnol
 
 Aplicación web propuesta para centralizar la información de los animales, registrar ordeños y facilitar el seguimiento de la producción de una finca lechera. Busca reemplazar la consolidación manual de cuadernos y hojas de cálculo por registros consistentes, permisos por rol, historial e indicadores verificables.
 
-**Estado actual:** frontend del sprint 1 rediseñado, con acceso y administración de usuarios integrados al backend de Franky. Se comprobaron login/logout, persistencia y expiración de sesión, creación, edición y desactivación de usuarios, correo duplicado y campos obligatorios. Las rutas versionadas de animales y estados siguen pendientes del backend de Juan Manuel; sus pantallas se pueden recorrer en la demo.
+**Estado actual:** frontend del sprint 1 rediseñado, con acceso y administración de usuarios integrados al backend de Franky. Se comprobaron login/logout, persistencia y expiración de sesión, creación, edición y desactivación de usuarios, correo duplicado y campos obligatorios. El backend de Juan Manuel incorpora animales, estados y auditoría. Esta entrega completa el listado paginado de animales y el motivo de desactivación exigido por la API; ambos flujos se verificaron desde el navegador.
 
 El diseño combina acceso con paisaje y formulario, navegación lateral carbón y tablas compactas. Usa SVG locales de Google Material Symbols. Se revisaron las pantallas en anchos de 320, 390, 768, 1280 y 1440 px. El paisaje es una imagen decorativa generada, con procedencia incluida en sus archivos.
 
 Para probar la interfaz: `cd frontend`, `npm ci`, `npm run demo`; abrir `http://127.0.0.1:5173/ui/`. Ver [guía del frontend](frontend/README.md) y [propuesta de contrato API para el equipo](docs/contrato-api-sprint1.md).
+
+La entrega de Nota 2 incluye el [informe consolidado](docs/sprint-review-1.md) ([PDF](docs/sprint-review-1.pdf)), el [guion de demostración](docs/demo-sprint1.md), el [script reproducible](scripts/demo_sprint1.py) y el [corte del tablero](docs/evidencia/tablero-2026-11-05.csv).
 
 ## Índice
 
@@ -54,7 +56,7 @@ El MVP contempla captura manual en línea y dos turnos diarios: mañana y tarde.
 | Requisito | Funcionalidad prevista | Estado actual |
 |---|---|---|
 | RF01 | Cuentas, acceso con correo y contraseña, cierre y expiración de sesión. | Implementado e integrado con el frontend; revisión del equipo pendiente. |
-| RF02 | Registro de animales, identificación única y estados con fecha efectiva. | Frontend y demo disponibles; backend versionado pendiente. Se conserva el alta mínima del PoC. |
+| RF02 | Registro de animales, identificación única y estados con fecha efectiva. | Registro, listado y cambios de estado integrados; el flujo de salida del hato continúa en PB-06. |
 | RF03 | Consulta de ficha e historial del animal. | Pendiente. |
 | RF04 | Registro de producción y descarte por animal, fecha y turno. | Parcial: API del PoC sin sesión real ni validación de estado productivo. |
 | RF05 | Validación de cantidades, fechas, estados y duplicados concurrentes. | Parcial: cantidades, turno y unicidad implementados; faltan reglas de fecha y estado. |
@@ -63,7 +65,7 @@ El MVP contempla captura manual en línea y dos turnos diarios: mañana y tarde.
 | RF08 | Promedio diario y cobertura de turnos. | Pendiente. |
 | RF09 | Reportes filtrados dentro de la aplicación. | Pendiente. |
 | RF10 | Corrección, anulación y reactivación con motivo y control de versión. | Pendiente; el PoC registra auditoría de creación. |
-| RF11 | Autorización en el servidor según el rol vigente. | Implementada para sesión y usuarios; extensión a animales y ordeños pendiente. |
+| RF11 | Autorización en el servidor según el rol vigente. | Implementada para sesión y usuarios; aplicada también a animales; extensión a ordeños pendiente. |
 | RF12 | Salidas del rebaño conservando el historial. | Pendiente. |
 | RF13 | Alertas internas por disminución de producción y umbral configurable. | Pendiente. |
 
@@ -113,7 +115,7 @@ El diseño propone una aplicación cliente-servidor con API REST y persistencia 
 
 | Componente | Tecnología | Situación |
 |---|---|---|
-| Interfaz | HTML, Tailwind CSS y JavaScript con Vite | Rediseño adaptable; sesión y usuarios integrados; animales disponibles en demo. |
+| Interfaz | HTML, Tailwind CSS y JavaScript con Vite | Rediseño adaptable; sesión, usuarios, registro y cambios de estado integrados. |
 | API | Python y FastAPI | Sesión y usuarios en /api/v1, más rutas del PoC. |
 | Validación | Pydantic y servicios de negocio | Implementación parcial. |
 | Persistencia | SQLAlchemy y SQLite | Usuarios, sesiones, auditoría y datos del PoC. |
@@ -188,7 +190,7 @@ Windows PowerShell, sin necesidad de activar scripts:
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 $env:POC_DATABASE_URL = 'sqlite:///login-pruebas.db'
-$env:POC_ORIGENES_PERMITIDOS = 'http://localhost:5187'
+$env:POC_ORIGENES_PERMITIDOS = 'http://localhost:5187,http://127.0.0.1:5187,http://localhost:5173,http://127.0.0.1:5173'
 .\.venv\Scripts\python.exe -m app.crear_admin --email admin@finca.co --nombre 'Admin de prueba'
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
@@ -198,7 +200,7 @@ Linux o macOS:
 ```bash
 .venv/bin/python -m pip install -r requirements.txt
 export POC_DATABASE_URL=sqlite:///login-pruebas.db
-export POC_ORIGENES_PERMITIDOS=http://localhost:5187
+export POC_ORIGENES_PERMITIDOS=http://localhost:5187,http://127.0.0.1:5187,http://localhost:5173,http://127.0.0.1:5173
 .venv/bin/python -m app.crear_admin --email admin@finca.co --nombre 'Admin de prueba'
 .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
@@ -213,9 +215,11 @@ npm.cmd ci
 npm.cmd run dev -- --host localhost --port 5187
 ```
 
-En Linux/macOS usar `npm` en lugar de `npm.cmd`. Abrir [el frontend](http://localhost:5187/ui/) y entrar con la cuenta creada. Mantener `localhost` en la URL para que coincida con el origen permitido. Vite redirige `/api` a `http://127.0.0.1:8000`.
+En Linux/macOS usar `npm` en lugar de `npm.cmd`. Abrir [el frontend](http://localhost:5187/ui/) y entrar con la cuenta creada. Vite redirige `/api` a `http://127.0.0.1:8000`.
 
-Después del acceso se abre Animales. Mientras falta `GET /api/v1/animales`, esa pantalla muestra un error de carga; **Usuarios** permite probar las funciones ya integradas.
+Si el login devuelve `403` con «Origen de la solicitud no permitido», comprobar que la dirección del navegador (protocolo, host y puerto) esté en `POC_ORIGENES_PERMITIDOS`. La configuración local anterior admite `localhost` y `127.0.0.1` en los puertos 5173 y 5187. Después de cambiarla, reiniciar Uvicorn desde esa misma terminal y recargar el frontend. No desactivar la validación CSRF. Un `401` de `/auth/session` antes de iniciar sesión es normal. En despliegues, configurar únicamente los orígenes reales autorizados.
+
+Después del acceso se abre Animales con búsqueda y filtro de estado. Usuarios permite crear, editar y desactivar cuentas; la desactivación solicita un motivo para la auditoría.
 
 También están disponibles [Swagger UI](http://127.0.0.1:8000/docs) y [OpenAPI JSON](http://127.0.0.1:8000/openapi.json).
 
@@ -248,6 +252,12 @@ La configuración es específica de SQLite; cambiar la URL no implementa por sí
 | GET | /api/v1/usuarios/{id} | Consultar una cuenta (Administrador). |
 | POST | /api/v1/usuarios | Crear una cuenta (Administrador). |
 | PATCH | /api/v1/usuarios/{id} | Editar datos, rol o estado activo (Administrador). |
+| GET | /api/v1/animales | Lista paginada con búsqueda y estado efectivo. |
+| POST | /api/v1/animales | Registro completo (Administrador). |
+| GET | /api/v1/animales/{id} | Consultar animal. |
+| GET | /api/v1/animales/{id}/estados | Historial paginado. |
+| POST | /api/v1/animales/{id}/estados | Cambiar estado con fecha, motivo y versión (Administrador). |
+| GET | /api/v1/auditoria | Consultar auditoría (Administrador). |
 | POST | /animales | Crear un animal con arete y nombre opcional. |
 | POST | /ordenos | Registrar un ordeño y su auditoría. |
 | GET | /docs | Documentación interactiva. |

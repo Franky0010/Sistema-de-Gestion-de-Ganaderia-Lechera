@@ -129,7 +129,7 @@
   dialog { padding: 28px; border: none; border-radius: 14px; max-width: min(440px,calc(100vw - 32px)); color: #243b32; box-shadow: 0 20px 70px #12332633; }
   dialog::backdrop { background: #142f2559; }
   dialog p { color: var(--muted); margin: 12px 0 24px; }
-  dialog .dialog-actions { display: flex; gap: 12px; justify-content: flex-end; }
+  dialog .dialog-actions { margin-top: 20px; display: flex; gap: 12px; justify-content: flex-end; }
   @media (hover: hover) and (pointer: fine) {
     .btn-primary:hover { background: #24604c; }
     .btn-secondary:hover,.btn-quiet:hover { background: #edf3ee; }

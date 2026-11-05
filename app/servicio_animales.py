@@ -7,7 +7,7 @@ decide la base de datos dentro de la transacción.
 """
 from datetime import date, timedelta, timezone
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -103,6 +103,35 @@ def animal_publico(db: Session, a: Animal) -> dict:
         "estado_desde": _iso(actual.fecha_desde) if actual else None,
         "version": a.version,
     }
+
+
+def listar_animales(db: Session, *, search: str = "", estado: str = "",
+                    page: int = 1, page_size: int = 20) -> dict:
+    """Filter by today's effective state before applying stable ID pagination.
+
+    Legacy animals without state history remain visible in unfiltered results.
+    Search treats SQL wildcard characters as literal user input.
+    """
+    if estado and estado not in ESTADOS_ANIMAL:
+        raise ErrorApi(422, "VALIDACION", "Revisa los campos indicados.",
+                       {"estado": "Selecciona un estado válido."})
+    conditions = []
+    term = search.strip().lower()
+    if term:
+        conditions.append(or_(func.lower(Animal.arete).contains(term, autoescape=True),
+                              func.lower(Animal.nombre).contains(term, autoescape=True)))
+    if estado:
+        effective_state = (select(EstadoAnimal.estado)
+                           .where(EstadoAnimal.animal_id == Animal.id,
+                                  EstadoAnimal.fecha_desde <= hoy())
+                           .order_by(EstadoAnimal.fecha_desde.desc(), EstadoAnimal.id.desc())
+                           .correlate(Animal).limit(1).scalar_subquery())
+        conditions.append(effective_state == estado)
+    total = db.scalar(select(func.count()).select_from(Animal).where(*conditions))
+    animals = db.scalars(select(Animal).where(*conditions).order_by(Animal.id)
+                        .offset((page - 1) * page_size).limit(page_size)).all()
+    return {"items": [animal_publico(db, animal) for animal in animals],
+            "total": total, "page": page, "page_size": page_size}
 
 
 def estado_publico(e: EstadoAnimal) -> dict:

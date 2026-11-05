@@ -70,6 +70,9 @@ test('usuarios: crear, editar, desactivar y conservar cuenta histórica',async({
   await row.getByRole('button',{name:'Desactivar',exact:true}).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.getByRole('button',{name:'Desactivar cuenta',exact:true}).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.getByLabel('Motivo de desactivación').fill('Cuenta de prueba finalizada');
+  await page.getByRole('button',{name:'Desactivar cuenta',exact:true}).click();
   await expect(row).toContainText('Inactivo');
 });
 test('rol de consulta no puede entrar por URL ni ve acciones de gestión',async({page})=>{
