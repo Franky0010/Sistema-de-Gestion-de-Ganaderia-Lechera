@@ -22,7 +22,7 @@ Abrir `http://127.0.0.1:5173/ui/`. En el acceso, seleccionar Administrador, Oper
 npm run dev
 ```
 
-El cliente usa `/api/v1` y Vite redirige `/api` a `http://127.0.0.1:8000`. Sesión y usuarios están implementados e integrados según el [contrato](../docs/contrato-api-sprint1.md). Las rutas versionadas de animales y estados siguen pendientes. Para crear el administrador y configurar el origen permitido, seguir las [instrucciones del README principal](../README.md#instalación-y-ejecución). El cliente conserva los errores de la API para que puedan corregirse.
+El cliente usa `/api/v1` y Vite redirige `/api` a `http://127.0.0.1:8000`. Sesión y usuarios están implementados e integrados según el [contrato](../docs/contrato-api-sprint1.md). También están disponibles el listado, registro y cambios de estado de animales. La desactivación de usuarios solicita un motivo conforme al contrato. Para crear el administrador y configurar el origen permitido, seguir las [instrucciones del README principal](../README.md#instalación-y-ejecución). El cliente conserva los errores de la API para que puedan corregirse.
 
 ### Reparto para integrar
 
@@ -79,4 +79,4 @@ HTTPS, cookies seguras, protección CSRF, cabeceras de seguridad y almacenamient
 
 ## Límites del avance
 
-Las subtareas #26 y #28 tienen comprobación integrada de sesión y usuarios, incluidos duplicados, campos obligatorios y expiración; falta la revisión de un compañero para cerrarlas. #30 requiere completar su verificación por rol con la API real. #32 y #34 esperan la API versionada de animales y estados. HT-02 y las verificaciones de permisos de módulos posteriores continúan según el backlog.
+Las subtareas #26, #28, #32 y #34 tienen comprobaciones con la API real. El informe de [Sprint Review 1](../docs/sprint-review-1.md) detalla límites, revisión pendiente y diferencias entre el estado del tablero y el cierre completo de las historias.

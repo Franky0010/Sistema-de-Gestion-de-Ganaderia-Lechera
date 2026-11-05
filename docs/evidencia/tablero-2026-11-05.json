@@ -1,0 +1,706 @@
+{
+  "fecha_corte": "2026-11-05",
+  "zona": "America/Bogota",
+  "nota": "Exportación del día de revisión; no acredita un corte del día anterior.",
+  "tablero": {
+    "items": [
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:HT-01 -->\n\n**Épica:** Calidad técnica\r\n\r\n**Fuente:** RNF01\r\n\r\n**Historia de usuario:** Como equipo de desarrollo, quiero proteger credenciales, sesiones y operaciones de cambio, para reducir accesos y solicitudes no autorizadas.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Las contraseñas usan hash adaptativo y los secretos permanecen fuera del repositorio.\r\n\r\n- [ ] El despliegue utiliza HTTPS y cookies HttpOnly, Secure y SameSite.\r\n\r\n- [ ] Las operaciones de cambio incluyen protección CSRF y la API valida usuario activo y permisos.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** —\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 21,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "HT-01 — Implementar seguridad de autenticación y sesión",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/21"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAO7A",
+        "labels": [
+          "epica:calidad",
+          "prioridad:must",
+          "tipo:tecnica"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "HT-01 — Implementar seguridad de autenticación y sesión"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-01 -->\n\n**Épica:** Acceso y usuarios\n\n**Fuente:** RF01, RNF01\n\n**Historia de usuario:** Como usuario activo, quiero iniciar y cerrar sesión con correo electrónico y contraseña, para acceder únicamente a las funciones permitidas por mi rol.\n\n**Criterios de aceptación:**\n\n- [ ] El sistema acepta credenciales válidas de una cuenta activa y rechaza credenciales inválidas o cuentas inactivas.\n\n- [ ] La sesión expira después de 30 minutos de inactividad y las solicitudes posteriores son rechazadas.\n\n- [ ] Al cerrar sesión se invalida la sesión vigente y no se exponen credenciales en la interfaz ni en los registros.\n\n**Prioridad:** Must\n\n**Estimación inicial:** 5 puntos de historia\n\n**Dependencias:** HT-01, PB-12\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 4,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-01 — Iniciar y cerrar sesión",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/4"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAMZ0",
+        "labels": [
+          "epica:acceso",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "PB-01 — Iniciar y cerrar sesión"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-02 -->\n\n**Épica:** Acceso y usuarios\r\n\r\n**Fuente:** RF01, RF11\r\n\r\n**Historia de usuario:** Como administrador, quiero crear, actualizar y desactivar cuentas, asignando los roles Administrador, Operario o Propietario, para controlar quién utiliza el sistema sin perder el historial.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] El correo electrónico es único y se validan nombre, contraseña y rol.\r\n\r\n- [ ] Una cuenta desactivada no puede iniciar sesión y sus registros históricos se conservan.\r\n\r\n- [ ] Operarios y propietarios no pueden administrar cuentas.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-01, HT-01\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 5,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-02 — Administrar cuentas de usuario",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/5"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAMeE",
+        "labels": [
+          "epica:acceso",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "PB-02 — Administrar cuentas de usuario"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-11 -->\n\n**Épica:** Acceso y usuarios\r\n\r\n**Fuente:** RF11\r\n\r\n**Historia de usuario:** Como propietario del sistema, quiero aplicar permisos en cada operación según el rol vigente, para evitar acciones no autorizadas.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Administrador gestiona usuarios, animales, estados, ordeños, correcciones, umbrales y auditoría.\r\n\r\n- [ ] Operario registra ordeños y consulta; Propietario solo consulta.\r\n\r\n- [ ] La API rechaza operaciones no autorizadas sin cambios persistidos; ocultar botones no sustituye esta validación.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-01, PB-02, HT-01\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 14,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-11 — Aplicar permisos por rol",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/14"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOa0",
+        "labels": [
+          "epica:acceso",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "PB-11 — Aplicar permisos por rol"
+      },
+      {
+        "assignees": [
+          "Juanloaiza25"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-01-FE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/4\n\nSprint: 1\nResponsable: @Juanloaiza25\n\n## Tareas y comprobaciones\n- [ ] Construir login y conectar login/logout con la API.\n- [ ] Mostrar credenciales invalidas, cuenta inactiva y sesion expirada.\n- [ ] Incluir carga, errores y navegacion posterior al acceso.\n- [ ] Integrar la proteccion CSRF acordada y probar el flujo completo.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 26,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-01-FE] Pantalla de acceso y manejo de sesion",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/26"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhZyg",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-01-FE] Pantalla de acceso y manejo de sesion"
+      },
+      {
+        "assignees": [
+          "Juanloaiza25"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-04-FE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/7\n\nSprint: 1\nResponsable: @Juanloaiza25\n\n## Tareas y comprobaciones\n- [ ] Permitir seleccionar el animal y registrar nuevo estado, fecha y motivo.\n- [ ] Presentar los estados permitidos y mensajes de validacion.\n- [ ] Conectar la API y mostrar confirmacion del cambio.\n- [ ] Probar errores de cambio duplicado e incompatibilidad reportados por la API.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 34,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-04-FE] Formulario de cambio de estado productivo",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/34"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhamQ",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-04-FE] Formulario de cambio de estado productivo"
+      },
+      {
+        "assignees": [
+          "Juanloaiza25"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-03-FE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/6\n\nSprint: 1\nResponsable: @Juanloaiza25\n\n## Tareas y comprobaciones\n- [ ] Construir formulario con arete, raza, procedencia, ingreso, nacimiento o edad y estado inicial; nombre opcional.\n- [ ] Mostrar errores junto a los campos y validar fechas.\n- [ ] Conectar el registro con la API y mostrar confirmacion.\n- [ ] Probar duplicados y fechas invalidas con backend.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 32,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-03-FE] Formulario de registro de animales",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/32"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhaaE",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-03-FE] Formulario de registro de animales"
+      },
+      {
+        "assignees": [
+          "Juanloaiza25"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-11-FE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/14\n\nSprint: 1\nResponsable: @Juanloaiza25\n\n## Tareas y comprobaciones\n- [ ] Acordar matriz de permisos con backend.\n- [ ] Adaptar navegacion y acciones para Administrador, Operario y Propietario.\n- [ ] Manejar respuestas 401/403 de la API.\n- [ ] Probar los tres roles; la interfaz no sustituye la autorizacion del servidor.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 30,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-11-FE] Navegacion y controles segun el rol",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/30"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhaNk",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-11-FE] Navegacion y controles segun el rol"
+      },
+      {
+        "assignees": [
+          "Franky0010"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-01-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/4\n\nSprint: 1\nResponsable: @Franky0010\n\n## Tareas y comprobaciones\n- [ ] Validar credenciales y usuario activo usando la base de HT-01.\n- [ ] Implementar login/logout e invalidacion de la sesion.\n- [ ] Expirar la sesion tras 30 minutos de inactividad.\n- [ ] Probar credenciales invalidas, inactivos, cierre y expiracion.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 27,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-01-BE] API de login, logout y expiracion",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/27"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhZ7c",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-01-BE] API de login, logout y expiracion"
+      },
+      {
+        "assignees": [
+          "Juanloaiza25"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-02-FE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/5\n\nSprint: 1\nResponsable: @Juanloaiza25\n\n## Tareas y comprobaciones\n- [ ] Crear listado y formularios de alta y edicion.\n- [ ] Permitir asignar rol y desactivar cuentas.\n- [ ] Mostrar validaciones de correo unico y campos obligatorios.\n- [ ] Conectar la API y probar con un administrador.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 28,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-02-FE] Interfaz de administracion de usuarios",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/28"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhaBc",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-02-FE] Interfaz de administracion de usuarios"
+      },
+      {
+        "assignees": [
+          "Franky0010"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:HT-02-USUARIOS -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/22\n\nSprint: 1\nResponsable: @Franky0010\n\n## Tareas y comprobaciones\n- [ ] Integrar la base de auditoria acordada con el otro responsable backend.\n- [ ] Aplicar restricciones y transacciones a operaciones de usuarios.\n- [ ] Registrar los cambios pertinentes sin guardar contrasenas ni secretos de sesion en auditoria.\n- [ ] Probar consistencia y rollback; esta tarea cubre solamente el alcance del sprint 1.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 38,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-HT-02-USUARIOS] Integridad y auditoria en usuarios",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/38"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFha_4",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-HT-02-USUARIOS] Integridad y auditoria en usuarios"
+      },
+      {
+        "assignees": [
+          "Franky0010"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-02-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/5\n\nSprint: 1\nResponsable: @Franky0010\n\n## Tareas y comprobaciones\n- [ ] Crear modelo y migracion de usuarios si no existen.\n- [ ] Implementar listado, alta, edicion y desactivacion.\n- [ ] Validar correo unico, nombre, contrasena y rol.\n- [ ] Conservar historial e impedir acceso a cuentas desactivadas; probar las operaciones.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 29,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-02-BE] API de administracion de usuarios",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/29"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhaHQ",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-02-BE] API de administracion de usuarios"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-03 -->\n\n**Épica:** Gestión del ganado\r\n\r\n**Fuente:** RF02\r\n\r\n**Historia de usuario:** Como administrador, quiero registrar un animal con su identificación y estado inicial, para disponer de una ficha única y trazable.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Se exige arete, raza, procedencia, fecha de ingreso, nacimiento o edad estimada y estado inicial; el nombre es opcional.\r\n\r\n- [ ] El arete se normaliza sin espacios extremos, no distingue mayúsculas y no puede repetirse ni reutilizarse.\r\n\r\n- [ ] Se rechazan fechas futuras o un nacimiento posterior al ingreso y la creación queda auditada.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** PB-01, PB-12, HT-02\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 6,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-03 — Registrar animales",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/6"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAMic",
+        "labels": [
+          "epica:ganado",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "PB-03 — Registrar animales"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-04 -->\n\n**Épica:** Gestión del ganado\r\n\r\n**Fuente:** RF02\r\n\r\n**Historia de usuario:** Como administrador, quiero cambiar el estado de un animal con fecha efectiva y motivo, para conservar la evolución real del hato.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Los estados permitidos son en producción, seco, no productivo y fuera del hato.\r\n\r\n- [ ] Cada cambio conserva fecha efectiva, motivo, responsable e historial; no se admite más de un cambio por animal y día.\r\n\r\n- [ ] Se rechazan cambios incompatibles con ordeños vigentes.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-03, HT-02\n\n**Sprint propuesto:** Sprint 1\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 7,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-04 — Cambiar el estado productivo",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/7"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAMmw",
+        "labels": [
+          "epica:ganado",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "PB-04 — Cambiar el estado productivo"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:HT-02 -->\n\n**Épica:** Calidad técnica\n\n**Fuente:** RNF06, RNF07\n\n**Historia de usuario:** Como equipo de desarrollo, quiero aplicar restricciones, claves foráneas, transacciones y auditoría, para evitar datos parciales y conservar trazabilidad.\n\n**Criterios de aceptación:**\n\n- [x] Se aplican identificadores únicos, claves foráneas y validaciones coherentes de fechas y cantidades.\n\n- [x] Datos, auditoría y efectos asociados se confirman o revierten en una sola transacción.\n\n- [x] La auditoría registra entidad, acción, usuario, fecha, valores anteriores y nuevos y motivo cuando corresponde.\n\n**Prioridad:** Must\n\n**Estimación inicial:** 8 puntos de historia\n\n**Dependencias:** HT-01\n\n**Sprint propuesto:** Sprints 1 y 2\n\n## Definición de terminado\n- [x] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [x] Código revisado y documentación actualizada.\n- [x] Integración y demostración funcional completadas.\n- [x] Sin defectos críticos abiertos.\n",
+          "number": 22,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "HT-02 — Garantizar integridad y auditoría transaccional",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/22"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAO_k",
+        "labels": [
+          "epica:calidad",
+          "prioridad:must",
+          "tipo:tecnica"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprints 1 y 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "HT-02 — Garantizar integridad y auditoría transaccional"
+      },
+      {
+        "assignees": [
+          "Franky0010"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:HT-01-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/21\n\nSprint: 1\nResponsable: @Franky0010\n\n## Tareas y comprobaciones\n- [ ] Configurar hash adaptativo y secretos fuera del repositorio.\n- [ ] Configurar cookies HttpOnly, Secure y SameSite.\n- [ ] Implementar proteccion CSRF y validacion de usuario activo.\n- [ ] Preparar HTTPS para despliegue y verificar configuracion y pruebas de seguridad.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 36,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-HT-01-BE] Base de seguridad de autenticacion",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/36"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhax0",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-HT-01-BE] Base de seguridad de autenticacion"
+      },
+      {
+        "assignees": [
+          "Franky0010"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-11-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/14\n\nSprint: 1\nResponsable: @Franky0010\n\n## Tareas y comprobaciones\n- [ ] Documentar matriz de permisos de los tres roles.\n- [ ] Crear mecanismo reutilizable para validar usuario activo y rol.\n- [ ] Aplicar permisos a endpoints de usuarios y ganado junto al otro responsable backend.\n- [ ] Probar rechazos sin cambios persistidos; definir como se aplicara a modulos posteriores.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 31,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-11-BE] Autorizacion por rol en la API",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/31"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhaUQ",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-11-BE] Autorizacion por rol en la API"
+      },
+      {
+        "assignees": [
+          "juanalvarez6"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:HT-02-BASE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/22\n\nSprint: 1\nResponsable: @juanalvarez6\n\n## Tareas y comprobaciones\n- [ ] Acordar entre los tres tablas, claves, contratos de endpoints y formato de errores.\n- [ ] Implementar claves foraneas, restricciones y estructura reutilizable de auditoria.\n- [ ] Aplicar transacciones a animales y estados.\n- [ ] Probar rollback y registro de entidad, accion, usuario, fecha y valores; HT-02 continua en sprint 2.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 37,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-HT-02-BASE] Base de integridad y auditoria del sprint 1",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/37"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFha6E",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-HT-02-BASE] Base de integridad y auditoria del sprint 1"
+      },
+      {
+        "assignees": [
+          "juanalvarez6"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-03-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/6\n\nSprint: 1\nResponsable: @juanalvarez6\n\n## Tareas y comprobaciones\n- [ ] Crear modelo, migracion y endpoint de animales.\n- [ ] Normalizar arete sin espacios extremos y sin distinguir mayusculas; impedir reutilizacion.\n- [ ] Validar datos obligatorios, fechas futuras y nacimiento posterior al ingreso.\n- [ ] Guardar estado inicial y auditoria en transaccion; probar restricciones y permisos.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 33,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-03-BE] Registro de animales y validaciones",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/33"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFhagA",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-03-BE] Registro de animales y validaciones"
+      },
+      {
+        "assignees": [
+          "juanalvarez6"
+        ],
+        "content": {
+          "body": "<!-- is873-sprint1:PB-04-BE -->\n\nHistoria: https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/7\n\nSprint: 1\nResponsable: @juanalvarez6\n\n## Tareas y comprobaciones\n- [ ] Implementar estados en produccion, seco, no productivo y fuera del hato.\n- [ ] Conservar fecha efectiva, motivo, responsable e historial.\n- [ ] Impedir mas de un cambio por animal y dia.\n- [ ] Acordar contrato de ordenos y probar incompatibilidades con datos de prueba; dejar explicito si la integracion queda pendiente.\n\n## Entrega\n- [ ] Pruebas del alcance aprobadas.\n- [ ] Revision de otro companero e integracion verificadas.\n\nLos puntos se mantienen en la historia padre. Completar esta subtarea no cierra automaticamente la historia.\n",
+          "number": 35,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "[S1-PB-04-BE] Cambios de estado e historial",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/35"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFharY",
+        "pB Sprint": "Sprint 1",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Done",
+        "title": "[S1-PB-04-BE] Cambios de estado e historial"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-05 -->\n\n**Épica:** Gestión del ganado\r\n\r\n**Fuente:** RF03\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero consultar la ficha y el historial productivo de un animal, para analizar su evolución aun después de su salida del hato.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Administrador, Operario y Propietario pueden buscar por arete o identificador.\r\n\r\n- [ ] El historial incluye estados, salidas, ordeños, responsables, correcciones y anulaciones.\r\n\r\n- [ ] La auditoría administrativa completa solo está disponible para el administrador y no se muestran credenciales ni datos de sesión.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-03, PB-04, PB-07, PB-10\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 8,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-05 — Consultar ficha e historial del animal",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/8"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAN9I",
+        "labels": [
+          "epica:ganado",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-05 — Consultar ficha e historial del animal"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-06 -->\n\n**Épica:** Gestión del ganado\r\n\r\n**Fuente:** RF12\r\n\r\n**Historia de usuario:** Como administrador, quiero registrar la salida de un animal mediante el estado fuera del hato, para cerrar su permanencia sin eliminar el historial.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Se exige tipo de salida —venta, muerte, descarte, robo o traslado—, fecha efectiva y motivo; las observaciones son opcionales.\r\n\r\n- [ ] La salida se guarda en ESTADO\\_ANIMAL y la fecha\\_desde corresponde a la fecha efectiva.\r\n\r\n- [ ] Se rechazan animales ya retirados y salidas retroactivas incompatibles con ordeños vigentes.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-03, PB-04, PB-10\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 9,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-06 — Registrar la salida del rebaño",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/9"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOBc",
+        "labels": [
+          "epica:ganado",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-06 — Registrar la salida del rebaño"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-07 -->\n\n**Épica:** Producción de leche\r\n\r\n**Fuente:** RF04\r\n\r\n**Historia de usuario:** Como operario o administrador, quiero registrar producción y descarte por animal, fecha y turno, para mantener la producción diaria centralizada.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Se registran animal, fecha, turno mañana o tarde, litros producidos, litros descartados y observaciones opcionales.\r\n\r\n- [ ] El responsable y la fecha de creación se obtienen de la sesión y del servidor y no son editables desde el cliente.\r\n\r\n- [ ] El ordeño y su auditoría se guardan en una sola transacción y actualizan indicadores y alertas.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** PB-01, PB-03, PB-04, PB-08, HT-02\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 10,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-07 — Registrar un ordeño",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/10"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOIU",
+        "labels": [
+          "epica:produccion",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-07 — Registrar un ordeño"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-08 -->\n\n**Épica:** Producción de leche\r\n\r\n**Fuente:** RF05\r\n\r\n**Historia de usuario:** Como usuario que registra un ordeño, quiero recibir validaciones claras antes de guardar, para evitar datos inconsistentes o duplicados.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Producción y descarte son valores finitos, no negativos y con máximo dos decimales; descarte no supera producción.\r\n\r\n- [ ] Solo existe un registro por animal, fecha y turno, incluso ante solicitudes concurrentes y aunque haya sido anulado.\r\n\r\n- [ ] Cero litros es válido; un turno ausente no equivale a cero; cualquier error evita escrituras parciales.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-03, PB-04, HT-02\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 11,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-08 — Validar cantidades y duplicados",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/11"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOMk",
+        "labels": [
+          "epica:produccion",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-08 — Validar cantidades y duplicados"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-09 -->\n\n**Épica:** Producción de leche\r\n\r\n**Fuente:** RF06\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero obtener totales precisos de producción, descarte y volumen disponible, para conocer el volumen aprovechable.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Volumen disponible se calcula como producción menos descarte.\r\n\r\n- [ ] Los cálculos usan únicamente ordeños vigentes y excluyen los anulados.\r\n\r\n- [ ] Los litros se muestran con hasta dos decimales y se almacenan como centilitros enteros.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 3 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-08\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 12,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-09 — Calcular producción, descarte y disponibilidad",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/12"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOSI",
+        "labels": [
+          "epica:produccion",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 3,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-09 — Calcular producción, descarte y disponibilidad"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-10 -->\n\n**Épica:** Producción de leche\r\n\r\n**Fuente:** RF10\r\n\r\n**Historia de usuario:** Como administrador, quiero corregir, anular o reactivar un ordeño indicando el motivo, para subsanar errores sin perder trazabilidad.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Cada cambio exige motivo, permisos vigentes y la versión conocida del registro.\r\n\r\n- [ ] La auditoría conserva valores anteriores y nuevos, responsable y momento, sin modificar creador ni fecha original.\r\n\r\n- [ ] El cambio, la auditoría y los recálculos se confirman juntos o se revierten por completo.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-08, PB-09, HT-02\n\n**Sprint propuesto:** Sprint 2\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 13,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-10 — Corregir, anular o reactivar ordeños",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/13"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOWg",
+        "labels": [
+          "epica:produccion",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 2",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-10 — Corregir, anular o reactivar ordeños"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-12 -->\n\n**Épica:** Reportes e indicadores\r\n\r\n**Fuente:** RF07\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero consultar producción, descarte y disponibilidad por animal y rango de fechas, para seguir la evolución productiva.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Los tres roles pueden consultar totales y evolución diaria con filtros válidos.\r\n\r\n- [ ] Un rango invertido se rechaza y un período sin registros muestra “Sin datos”.\r\n\r\n- [ ] Los totales y la gráfica coinciden con los ordeños vigentes.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-09\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 15,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-12 — Consultar producción por animal y período",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/15"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOgA",
+        "labels": [
+          "epica:reportes",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-12 — Consultar producción por animal y período"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-13 -->\n\n**Épica:** Reportes e indicadores\r\n\r\n**Fuente:** RF07\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero comparar dos períodos de igual duración, para identificar variaciones de producción.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Ambos períodos usan los mismos filtros y deben tener igual duración.\r\n\r\n- [ ] Se muestra diferencia absoluta y variación porcentual con la fórmula definida.\r\n\r\n- [ ] Cuando el período de referencia vale cero, el porcentaje aparece como “No calculable”.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-12\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 16,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-13 — Comparar dos períodos",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/16"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOlY",
+        "labels": [
+          "epica:reportes",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-13 — Comparar dos períodos"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-14 -->\n\n**Épica:** Reportes e indicadores\r\n\r\n**Fuente:** RF08\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero consultar el promedio diario y la cobertura de turnos, para distinguir datos completos de registros parciales.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] El promedio diario divide la producción del día entre animales distintos con al menos un ordeño vigente.\r\n\r\n- [ ] Se identifica cuáles animales tienen mañana y tarde completas y cuáles presentan días parciales.\r\n\r\n- [ ] Sin registros se muestra “Sin datos” y la ausencia de turno no se contabiliza como cero.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-09\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 17,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-14 — Visualizar indicadores y cobertura de turnos",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/17"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOpk",
+        "labels": [
+          "epica:reportes",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-14 — Visualizar indicadores y cobertura de turnos"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-15 -->\n\n**Épica:** Reportes e indicadores\r\n\r\n**Fuente:** RF09\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero consultar reportes por período, animal y turno, para revisar totales y detalles dentro de la aplicación.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] El reporte permite filtrar por período, animal y turno.\r\n\r\n- [ ] Los totales de producción, descarte y disponibilidad coinciden con los registros vigentes.\r\n\r\n- [ ] Los filtros inválidos se rechazan y los períodos vacíos se presentan claramente; PDF y CSV quedan fuera del MVP.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-12, PB-14\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 18,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-15 — Consultar reportes filtrados",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/18"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOuw",
+        "labels": [
+          "epica:reportes",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-15 — Consultar reportes filtrados"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-16 -->\n\n**Épica:** Alertas\r\n\r\n**Fuente:** RF13\r\n\r\n**Historia de usuario:** Como usuario autorizado, quiero consultar alertas internas por disminución de producción, para revisar oportunamente variaciones significativas.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Se compara la producción diaria con el promedio de los siete días calendario anteriores usando producción sin descontar descarte.\r\n\r\n- [ ] Los ocho días deben tener ambos turnos y pertenecer a un intervalo continuo en producción; de lo contrario se informa “Datos incompletos” o “No evaluable”.\r\n\r\n- [ ] Se crea una sola alerta por animal y fecha cuando la disminución alcanza el umbral, mostrando valores y motivo; no constituye diagnóstico.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-10, PB-14, PB-17\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 19,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-16 — Detectar disminuciones de producción",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/19"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAOzc",
+        "labels": [
+          "epica:alertas",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-16 — Detectar disminuciones de producción"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:PB-17 -->\n\n**Épica:** Alertas\r\n\r\n**Fuente:** RF13\r\n\r\n**Historia de usuario:** Como administrador, quiero configurar el porcentaje de disminución que activa una alerta, para adaptar el criterio de revisión manteniendo su historial.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] El umbral inicial es 20 % y solo admite valores mayores que 0 y menores o iguales que 100.\r\n\r\n- [ ] El nuevo valor entra en vigencia desde el día siguiente y conserva auditoría.\r\n\r\n- [ ] Los cálculos históricos utilizan la versión del umbral aplicable a cada fecha.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 3 puntos de historia\r\n\r\n**Dependencias:** PB-01, PB-11, HT-02\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 20,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "PB-17 — Configurar el umbral de alertas",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/20"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAO3Y",
+        "labels": [
+          "epica:alertas",
+          "prioridad:must",
+          "tipo:funcional"
+        ],
+        "pB Puntos": 3,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "PB-17 — Configurar el umbral de alertas"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:HT-03 -->\n\n**Épica:** Calidad técnica\r\n\r\n**Fuente:** RNF03, RNF09\r\n\r\n**Historia de usuario:** Como usuario, quiero utilizar la aplicación desde computador o móvil y navegar con claridad, para completar los flujos sin instalación local.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] La interfaz se adapta a computadores y dispositivos móviles.\r\n\r\n- [ ] Los controles tienen etiquetas claras, admiten navegación por teclado y muestran errores junto al campo.\r\n\r\n- [ ] Los flujos principales funcionan en versiones modernas de Chrome, Firefox y Edge.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 5 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-12\n\n**Sprint propuesto:** Sprint 3\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 23,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "HT-03 — Asegurar usabilidad y compatibilidad",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/23"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAPEY",
+        "labels": [
+          "epica:calidad",
+          "prioridad:must",
+          "tipo:tecnica"
+        ],
+        "pB Puntos": 5,
+        "pB Sprint": "Sprint 3",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "HT-03 — Asegurar usabilidad y compatibilidad"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:HT-04 -->\n\n**Épica:** Calidad técnica\r\n\r\n**Fuente:** RNF02, RNF04, RNF05, RNF08\r\n\r\n**Historia de usuario:** Como equipo de desarrollo, quiero mantener una solución medible, modular y preparada para evolución, para facilitar pruebas, mantenimiento y crecimiento.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Rutas, servicios de negocio y repositorios están separados; la API se documenta con OpenAPI y las versiones quedan fijadas.\r\n\r\n- [ ] Guardar ordeños y listar animales tarda menos de 2 s en P95; reportes de hasta 90 días, menos de 3 s en P95, sin latencia de Internet.\r\n\r\n- [ ] El prototipo alcanza 99 % de respuestas exitosas durante la ventana acordada de 8 horas y permite evaluar migración de SQLite a PostgreSQL.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** PB-07, PB-15, HT-02\n\n**Sprint propuesto:** Sprint 4\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 24,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "HT-04 — Cumplir arquitectura y metas de rendimiento",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/24"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAPIA",
+        "labels": [
+          "epica:calidad",
+          "prioridad:must",
+          "tipo:tecnica"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 4",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "HT-04 — Cumplir arquitectura y metas de rendimiento"
+      },
+      {
+        "content": {
+          "body": "<!-- is873-ganaderia:HT-05 -->\n\n**Épica:** Calidad técnica\r\n\r\n**Fuente:** RNF10\r\n\r\n**Historia de usuario:** Como equipo de desarrollo, quiero documentar y ejecutar pruebas para cada elemento del MVP, para entregar una versión integrada sin defectos críticos.\r\n\r\n**Criterios de aceptación:**\r\n\r\n- [ ] Cada funcionalidad cuenta con pruebas documentadas y aprobadas antes de marcarse como terminada.\r\n\r\n- [ ] El código pasa revisión, la documentación queda actualizada y el incremento se demuestra integrado.\r\n\r\n- [ ] El MVP valida todos los RNF y no presenta defectos críticos abiertos.\r\n\r\n**Prioridad:** Must\r\n\r\n**Estimación inicial:** 8 puntos de historia\r\n\r\n**Dependencias:** Todos los elementos del MVP\n\n**Sprint propuesto:** Sprint 4\n\n## Definición de terminado\n- [ ] Criterios de aceptación cumplidos y pruebas aprobadas.\n- [ ] Código revisado y documentación actualizada.\n- [ ] Integración y demostración funcional completadas.\n- [ ] Sin defectos críticos abiertos.\n",
+          "number": 25,
+          "repository": "Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+          "title": "HT-05 — Verificar calidad y preparar el despliegue",
+          "type": "Issue",
+          "url": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/25"
+        },
+        "id": "PVTI_lAHOCXuW1M4BpmCtzhFAPMg",
+        "labels": [
+          "epica:calidad",
+          "prioridad:must",
+          "tipo:tecnica"
+        ],
+        "pB Puntos": 8,
+        "pB Sprint": "Sprint 4",
+        "repository": "https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera",
+        "status": "Todo",
+        "title": "HT-05 — Verificar calidad y preparar el despliegue"
+      }
+    ],
+    "totalCount": 35
+  }
+}

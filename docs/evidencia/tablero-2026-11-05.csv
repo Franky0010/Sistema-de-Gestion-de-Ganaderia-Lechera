@@ -1,0 +1,36 @@
+﻿Tarjeta,Estado observado,Responsables,Enlace
+HT-01 — Implementar seguridad de autenticación y sesión,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/21
+PB-01 — Iniciar y cerrar sesión,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/4
+PB-02 — Administrar cuentas de usuario,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/5
+PB-11 — Aplicar permisos por rol,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/14
+[S1-PB-01-FE] Pantalla de acceso y manejo de sesion,Done,Juanloaiza25,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/26
+[S1-PB-04-FE] Formulario de cambio de estado productivo,Done,Juanloaiza25,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/34
+[S1-PB-03-FE] Formulario de registro de animales,Done,Juanloaiza25,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/32
+[S1-PB-11-FE] Navegacion y controles segun el rol,Done,Juanloaiza25,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/30
+"[S1-PB-01-BE] API de login, logout y expiracion",Done,Franky0010,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/27
+[S1-PB-02-FE] Interfaz de administracion de usuarios,Done,Juanloaiza25,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/28
+[S1-HT-02-USUARIOS] Integridad y auditoria en usuarios,Done,Franky0010,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/38
+[S1-PB-02-BE] API de administracion de usuarios,Done,Franky0010,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/29
+PB-03 — Registrar animales,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/6
+PB-04 — Cambiar el estado productivo,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/7
+HT-02 — Garantizar integridad y auditoría transaccional,Done,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/22
+[S1-HT-01-BE] Base de seguridad de autenticacion,Done,Franky0010,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/36
+[S1-PB-11-BE] Autorizacion por rol en la API,Done,Franky0010,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/31
+[S1-HT-02-BASE] Base de integridad y auditoria del sprint 1,Done,juanalvarez6,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/37
+[S1-PB-03-BE] Registro de animales y validaciones,Done,juanalvarez6,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/33
+[S1-PB-04-BE] Cambios de estado e historial,Done,juanalvarez6,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/35
+PB-05 — Consultar ficha e historial del animal,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/8
+PB-06 — Registrar la salida del rebaño,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/9
+PB-07 — Registrar un ordeño,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/10
+PB-08 — Validar cantidades y duplicados,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/11
+"PB-09 — Calcular producción, descarte y disponibilidad",Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/12
+"PB-10 — Corregir, anular o reactivar ordeños",Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/13
+PB-12 — Consultar producción por animal y período,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/15
+PB-13 — Comparar dos períodos,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/16
+PB-14 — Visualizar indicadores y cobertura de turnos,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/17
+PB-15 — Consultar reportes filtrados,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/18
+PB-16 — Detectar disminuciones de producción,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/19
+PB-17 — Configurar el umbral de alertas,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/20
+HT-03 — Asegurar usabilidad y compatibilidad,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/23
+HT-04 — Cumplir arquitectura y metas de rendimiento,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/24
+HT-05 — Verificar calidad y preparar el despliegue,Todo,,https://github.com/Franky0010/Sistema-de-Gestion-de-Ganaderia-Lechera/issues/25
