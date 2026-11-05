@@ -1,7 +1,7 @@
 import './styles.css';
 import { createApi } from './api.js';
 import { canManage, escapeHtml as e, validate } from './domain.js';
-import { shell, loginView, listView, animalForm, userForm, stateForm, heading } from './views.js';
+import { shell, loginView, listView, animalForm, userForm, stateForm, heading, field } from './views.js';
 
 const demo = __DEMO__;
 const api = demo ? (await import('./demo.js')).createDemoApi() : createApi();
@@ -102,17 +102,22 @@ async function deactivate(id,name) {
   const owner=revision;
   const dialog=document.createElement('dialog');
   dialog.setAttribute('aria-labelledby','confirm-title');
-  dialog.innerHTML=`<h2 id="confirm-title">¿Desactivar esta cuenta?</h2><p>${e(name)} ya no podrá iniciar sesión. Su historial se conservará.</p><div class="alert" id="dialog-error" role="alert" hidden></div><div class="dialog-actions"><button class="btn btn-secondary" id="cancel-deactivate" autofocus>Cancelar</button><button class="btn btn-danger" id="confirm-deactivate">Desactivar cuenta</button></div>`;
+  dialog.innerHTML=`<h2 id="confirm-title">¿Desactivar esta cuenta?</h2><p>${e(name)} ya no podrá iniciar sesión. Su historial se conservará.</p><div class="alert" id="dialog-error" role="alert" hidden></div>${field('deactivate-reason','Motivo de desactivación',{type:'textarea',required:true,max:500})}<div class="dialog-actions"><button class="btn btn-secondary" id="cancel-deactivate" autofocus>Cancelar</button><button class="btn btn-danger" id="confirm-deactivate">Desactivar cuenta</button></div>`;
   document.body.append(dialog); dialog.showModal();
   let busy=false;
   dialog.addEventListener('cancel',event=>{ if(busy) event.preventDefault(); });
   dialog.addEventListener('close',()=>dialog.remove());
+  dialog.querySelector('#deactivate-reason').addEventListener('input',event=>event.target.setCustomValidity(''));
   dialog.querySelector('#cancel-deactivate').onclick=()=>dialog.close();
   dialog.querySelector('#confirm-deactivate').onclick=async()=>{
-    if(busy) return; busy=true;
+    if(busy) return;
+    const reason=dialog.querySelector('#deactivate-reason');
+    reason.setCustomValidity(reason.value.trim() ? '' : 'Indica el motivo de desactivación.');
+    if(!reason.reportValidity()) return;
+    busy=true;
     dialog.querySelectorAll('button').forEach(b=>b.disabled=true);
     try {
-      await api.updateUser(id,{activo:false});
+      await api.updateUser(id,{activo:false,motivo:reason.value.trim()});
       if(owner!==revision) return;
       dialog.close();
       if(Number(id)===user.id) { login('Tu cuenta fue desactivada. Contacta al administrador.'); return; }
