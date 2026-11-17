@@ -1,7 +1,7 @@
 """HT-01: primitivas de seguridad (sin base de datos ni HTTP)."""
 from datetime import datetime, timedelta
 
-from app import seguridad
+from app.core import seguridad
 
 
 def test_hash_adaptativo_con_sal_y_verificacion():

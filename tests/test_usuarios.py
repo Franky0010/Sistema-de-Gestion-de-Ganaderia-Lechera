@@ -4,8 +4,8 @@ import json
 import pytest
 from sqlalchemy import select
 
-from app import auditoria
 from app.models import Auditoria, Sesion, Usuario
+from app.services import auditoria
 from tests.conftest import USUARIOS, cliente_con_sesion, escribir, iniciar_sesion
 
 NUEVO = {"nombre": "  Nora Nueva ", "email": "  Nora@Finca.CO ", "password": "otra-clave-12", "rol": "operario"}
@@ -138,3 +138,29 @@ def test_si_falla_la_auditoria_se_revierte_todo(api, monkeypatch):
         escribir(admin, "PATCH", "/api/v1/usuarios/2", {"nombre": "Cambiado"})
     assert api.contar(Usuario) == 3
     assert api.consultar(select(Usuario.nombre).where(Usuario.id == 2)) == ["Oscar Operario"]
+
+
+def test_actualizar_correo_de_otra_cuenta_devuelve_409_y_no_cambia_nada(api):
+    admin = cliente_con_sesion(api, "admin")
+    antes = api.contar(Auditoria)
+    # El correo del operario (id 2) ya existe: se prueba también con mayúsculas y espacios.
+    r = escribir(admin, "PATCH", "/api/v1/usuarios/3", {"email": "  OPERARIO@finca.co "})
+    assert (r.status_code, r.json()["error"]["code"]) == (409, "EMAIL_DUPLICADO")
+    assert r.json()["error"]["fields"] == {"email": "Usa un correo diferente."}
+    assert api.filas(select(Usuario.email).where(Usuario.id == 3)) == [("propietario@finca.co",)]
+    assert api.contar(Auditoria) == antes
+
+
+def test_actualizar_conservando_su_propio_correo_no_es_duplicado(api):
+    admin = cliente_con_sesion(api, "admin")
+    antes = api.contar(Auditoria)
+    # El formulario reenvía el correo sin cambios (con otra capitalización) junto con otro campo.
+    r = escribir(admin, "PATCH", "/api/v1/usuarios/2", {"email": " Operario@Finca.CO ", "nombre": "Oscar O."})
+    assert r.status_code == 200 and r.json()["email"] == "operario@finca.co"
+    assert api.contar(Auditoria) == antes + 1  # solo cambió el nombre
+
+
+def test_actualizar_a_un_correo_libre_funciona(api):
+    admin = cliente_con_sesion(api, "admin")
+    r = escribir(admin, "PATCH", "/api/v1/usuarios/2", {"email": "oscar.nuevo@finca.co"})
+    assert r.status_code == 200 and r.json()["email"] == "oscar.nuevo@finca.co"

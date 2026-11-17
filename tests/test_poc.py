@@ -16,10 +16,12 @@ import httpx
 import pytest
 from sqlalchemy import func, select
 
-from app import service
-from app.database import crear_engine, crear_session_factory
-from app.main import app, get_session
+from app.db.database import crear_engine, crear_session_factory
+from app.db.session import get_session
+from app.main import app
 from app.models import Animal, Auditoria, Base, Ordeno
+from app.repositories import UnidadDeTrabajoSQL
+from app.services import ordenos as service
 
 HEADERS = {"X-Usuario": "operario01"}
 FECHA_BASE = date(2026, 10, 6)
@@ -66,7 +68,7 @@ def payload(animal_id, fecha=FECHA_BASE, turno="mañana", prod="12.50", desc="0.
 def test_creacion_valida_deja_un_ordeno_y_su_auditoria(entorno):
     with entorno.SessionLocal() as s:
         o = service.registrar_ordeno(
-            s, animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="mañana",
+            UnidadDeTrabajoSQL(s), animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="mañana",
             litros_producidos=Decimal("12.50"), litros_descartados=Decimal("0.50"),
             usuario="operario01",
         )
@@ -115,7 +117,7 @@ def test_ocho_hilos_con_la_misma_clave_solo_uno_gana(entorno):
             barrera.wait()  # todos arrancan a la vez
             try:
                 service.registrar_ordeno(
-                    s, animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="tarde",
+                    UnidadDeTrabajoSQL(s), animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="tarde",
                     litros_producidos=Decimal("10"), litros_descartados=Decimal("0"),
                     usuario="operario01",
                 )
@@ -147,7 +149,7 @@ def test_fallo_antes_del_commit_deja_cero_registros(entorno, monkeypatch):
     with entorno.SessionLocal() as s:
         with pytest.raises(RuntimeError):
             service.registrar_ordeno(
-                s, animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="mañana",
+                UnidadDeTrabajoSQL(s), animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="mañana",
                 litros_producidos=Decimal("12.50"), litros_descartados=Decimal("0.50"),
                 usuario="operario01",
             )
@@ -225,7 +227,7 @@ def test_cantidades_extremas_devuelven_422_sin_escribir(entorno, cantidad, campo
 def test_limite_sqlite_se_persiste_sin_perder_precision(entorno):
     with entorno.SessionLocal() as s:
         o = service.registrar_ordeno(
-            s, animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="tarde",
+            UnidadDeTrabajoSQL(s), animal_id=entorno.animal_id, fecha=FECHA_BASE, turno="tarde",
             litros_producidos=Decimal("92233720368547758.07"),
             litros_descartados=Decimal("0"), usuario="operario01",
         )

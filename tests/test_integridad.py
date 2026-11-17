@@ -8,10 +8,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select, text
 from sqlalchemy.exc import DBAPIError, IntegrityError
 
-from app import auditoria, respaldo
-from app.database import crear_engine
-from app.errores import instalar_manejadores
+from app.api.manejadores_errores import instalar_manejadores
+from app.db import respaldo, triggers
+from app.db.database import crear_engine
 from app.models import Auditoria, Base, Usuario
+from app.services import auditoria
 
 from .conftest import cliente_con_sesion, escribir
 
@@ -62,8 +63,8 @@ def test_solo_el_administrador_consulta_y_nadie_puede_alterarla_por_la_api(api):
 def test_la_bd_impide_update_y_delete_sobre_la_auditoria(tmp_path):
     engine = crear_engine(f"sqlite:///{tmp_path / 'a.db'}")
     Base.metadata.create_all(engine)
-    auditoria.proteger_auditoria(engine)
-    auditoria.proteger_auditoria(engine)  # idempotente
+    triggers.proteger_auditoria(engine)
+    triggers.proteger_auditoria(engine)  # idempotente
     with engine.begin() as con:
         con.execute(text("INSERT INTO auditoria (entidad, entidad_id, accion, usuario, momento) VALUES ('x', 1, 'crear', 'u', '2026-11-04')"))
     for sentencia in ("UPDATE auditoria SET usuario = 'otro'", "DELETE FROM auditoria"):

@@ -8,11 +8,14 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 
-from app import auditoria, migraciones, servicio_usuarios
-from app.database import crear_engine
+from app.db import triggers
+from app.db.database import crear_engine
 from app.main import app
 from app.models import Animal, Auditoria, Base, EstadoAnimal, Ordeno
-from app.servicio_animales import hoy
+from app.repositories import UnidadDeTrabajoSQL
+from app.services import auditoria
+from app.services import usuarios as servicio_usuarios
+from app.services.animales import hoy
 
 from .conftest import CLAVE, cliente_con_sesion, escribir, iniciar_sesion, pedir_csrf
 
@@ -146,7 +149,7 @@ def test_el_cliente_no_puede_fijar_responsable_ni_datos_de_auditoria(api):
 
 def test_dos_altas_simultaneas_con_el_mismo_arete_solo_crean_una(api):
     with api.SessionLocal() as db:  # un segundo administrador: iniciar sesión dos veces con el mismo usuario revoca la primera
-        servicio_usuarios.crear_usuario(db, None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
+        servicio_usuarios.crear_usuario(UnidadDeTrabajoSQL(db), None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
     clientes = [cliente_con_sesion(api, "admin"), api.nuevo_cliente()]
     assert iniciar_sesion(clientes[1], "admin2@finca.co").status_code == 200
     tokens = [pedir_csrf(c) for c in clientes]
@@ -438,8 +441,8 @@ def test_el_historial_no_se_puede_alterar_ni_por_la_api_ni_por_la_base(api, tmp_
         assert escribir(admin, metodo, f"/api/v1/animales/{a['id']}/estados", {}).status_code == 405
     engine = crear_engine(f"sqlite:///{tmp_path / 'h.db'}")
     Base.metadata.create_all(engine)
-    migraciones.proteger_historial(engine)
-    migraciones.proteger_historial(engine)  # idempotente
+    triggers.proteger_historial(engine)
+    triggers.proteger_historial(engine)  # idempotente
     with engine.begin() as con:
         con.execute(text("INSERT INTO usuario (nombre, email, hash_clave, rol, activo, creado_en, actualizado_en) VALUES ('u','u@f.co','x','administrador',1,'2026-01-01','2026-01-01')"))
         con.execute(text("INSERT INTO animal (arete, version) VALUES ('A1', 1)"))
@@ -453,7 +456,7 @@ def test_el_historial_no_se_puede_alterar_ni_por_la_api_ni_por_la_base(api, tmp_
 
 def test_dos_cambios_simultaneos_con_la_misma_version_solo_aplican_uno(api):
     with api.SessionLocal() as db:
-        servicio_usuarios.crear_usuario(db, None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
+        servicio_usuarios.crear_usuario(UnidadDeTrabajoSQL(db), None, nombre="Otro Admin", email="admin2@finca.co", password=CLAVE, rol="administrador")
     clientes = [cliente_con_sesion(api, "admin"), api.nuevo_cliente()]
     assert iniciar_sesion(clientes[1], "admin2@finca.co").status_code == 200
     a = crear(clientes[0])
