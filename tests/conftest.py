@@ -6,10 +6,13 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
-from app import seguridad, servicio_usuarios
-from app.database import crear_engine, crear_session_factory
-from app.main import app, get_session
+from app.core import seguridad
+from app.db.database import crear_engine, crear_session_factory
+from app.db.session import get_session
+from app.main import app
 from app.models import Auditoria, Base, Sesion, Usuario
+from app.repositories import UnidadDeTrabajoSQL
+from app.services import usuarios as servicio_usuarios
 
 CLAVE = "clave-segura-1"
 USUARIOS = {
@@ -37,7 +40,7 @@ def api(tmp_path, monkeypatch):
     SessionLocal = crear_session_factory(engine)
     with SessionLocal() as db:
         for nombre, email, rol in USUARIOS.values():
-            servicio_usuarios.crear_usuario(db, None, nombre=nombre, email=email, password=CLAVE, rol=rol)
+            servicio_usuarios.crear_usuario(UnidadDeTrabajoSQL(db), None, nombre=nombre, email=email, password=CLAVE, rol=rol)
 
     def _get_session():
         with SessionLocal() as db:

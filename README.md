@@ -31,15 +31,15 @@ La entrega de Nota 2 incluye el [informe consolidado](docs/sprint-review-1.md) (
 
 ## Documentación
 
-| Documento | Contenido |
-|---|---|
-| [Planteamiento y diseño](docs/planteamiento-y-diseno.md) | Problema, objetivos, RF01–RF13, RNF01–RNF10, casos de uso, arquitectura, modelo de datos y mockups. |
-| [Product Backlog](docs/product-backlog.md) | 17 historias funcionales y 5 historias técnicas, criterios de aceptación, prioridades, estimaciones, dependencias y propuesta de sprints. |
-| [Prueba de concepto](docs/POC.md) | Riesgo técnico evaluado, procedimiento, resultados y limitaciones de concurrencia y atomicidad. |
-| [Frontend](frontend/README.md) | Demo, rutas, pruebas y compilación. |
-| [Contrato de API](docs/contrato-api-sprint1.md) | Endpoints y responsables de implementación. |
-| [Backend de acceso](docs/backend-acceso.md) | Sesiones, usuarios y configuración. |
-| [Sistema visual](DESIGN.md) | Diseño aprobado, componentes y adaptación móvil. |
+| Documento                                                | Contenido                                                                                                                                 |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Planteamiento y diseño](docs/planteamiento-y-diseno.md) | Problema, objetivos, RF01–RF13, RNF01–RNF10, casos de uso, arquitectura, modelo de datos y mockups.                                       |
+| [Product Backlog](docs/product-backlog.md)               | 17 historias funcionales y 5 historias técnicas, criterios de aceptación, prioridades, estimaciones, dependencias y propuesta de sprints. |
+| [Prueba de concepto](docs/POC.md)                        | Riesgo técnico evaluado, procedimiento, resultados y limitaciones de concurrencia y atomicidad.                                           |
+| [Frontend](frontend/README.md)                           | Demo, rutas, pruebas y compilación.                                                                                                       |
+| [Contrato de API](docs/contrato-api-sprint1.md)          | Endpoints y responsables de implementación.                                                                                               |
+| [Backend de acceso](docs/backend-acceso.md)              | Sesiones, usuarios y configuración.                                                                                                       |
+| [Sistema visual](DESIGN.md)                              | Diseño aprobado, componentes y adaptación móvil.                                                                                          |
 
 Las versiones Markdown se pueden leer directamente en GitHub e incluyen índices navegables y las imágenes del diseño. Los archivos Word se conservan tal como fueron entregados y están enlazados al inicio de cada documento para su descarga. El planteamiento todavía describe la ejecución del PoC como pendiente; el código y su informe reflejan el avance posterior. Las estimaciones y la distribución de sprints del backlog son propuestas sujetas a refinamiento.
 
@@ -53,21 +53,21 @@ El objetivo es desarrollar, probar y desplegar una aplicación que permita regis
 
 El MVP contempla captura manual en línea y dos turnos diarios: mañana y tarde. Todos los requisitos funcionales son **Must**; los requisitos no funcionales también forman parte de la aceptación.
 
-| Requisito | Funcionalidad prevista | Estado actual |
-|---|---|---|
-| RF01 | Cuentas, acceso con correo y contraseña, cierre y expiración de sesión. | Implementado e integrado con el frontend; revisión del equipo pendiente. |
-| RF02 | Registro de animales, identificación única y estados con fecha efectiva. | Registro, listado y cambios de estado integrados; el flujo de salida del hato continúa en PB-06. |
-| RF03 | Consulta de ficha e historial del animal. | Pendiente. |
-| RF04 | Registro de producción y descarte por animal, fecha y turno. | Parcial: API del PoC sin sesión real ni validación de estado productivo. |
-| RF05 | Validación de cantidades, fechas, estados y duplicados concurrentes. | Parcial: cantidades, turno y unicidad implementados; faltan reglas de fecha y estado. |
-| RF06 | Totales de producción, descarte y volumen disponible. | Parcial: centilitros y disponibilidad de un registro; faltan acumulados. |
-| RF07 | Consultas por animal y período y comparación entre períodos. | Pendiente. |
-| RF08 | Promedio diario y cobertura de turnos. | Pendiente. |
-| RF09 | Reportes filtrados dentro de la aplicación. | Pendiente. |
-| RF10 | Corrección, anulación y reactivación con motivo y control de versión. | Pendiente; el PoC registra auditoría de creación. |
-| RF11 | Autorización en el servidor según el rol vigente. | Implementada para sesión y usuarios; aplicada también a animales; extensión a ordeños pendiente. |
-| RF12 | Salidas del rebaño conservando el historial. | Pendiente. |
-| RF13 | Alertas internas por disminución de producción y umbral configurable. | Pendiente. |
+| Requisito | Funcionalidad prevista                                                   | Estado actual                                                                                    |
+| --------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| RF01      | Cuentas, acceso con correo y contraseña, cierre y expiración de sesión.  | Implementado e integrado con el frontend; revisión del equipo pendiente.                         |
+| RF02      | Registro de animales, identificación única y estados con fecha efectiva. | Registro, listado y cambios de estado integrados; el flujo de salida del hato continúa en PB-06. |
+| RF03      | Consulta de ficha e historial del animal.                                | Pendiente.                                                                                       |
+| RF04      | Registro de producción y descarte por animal, fecha y turno.             | Parcial: API del PoC sin sesión real ni validación de estado productivo.                         |
+| RF05      | Validación de cantidades, fechas, estados y duplicados concurrentes.     | Parcial: cantidades, turno y unicidad implementados; faltan reglas de fecha y estado.            |
+| RF06      | Totales de producción, descarte y volumen disponible.                    | Parcial: centilitros y disponibilidad de un registro; faltan acumulados.                         |
+| RF07      | Consultas por animal y período y comparación entre períodos.             | Pendiente.                                                                                       |
+| RF08      | Promedio diario y cobertura de turnos.                                   | Pendiente.                                                                                       |
+| RF09      | Reportes filtrados dentro de la aplicación.                              | Pendiente.                                                                                       |
+| RF10      | Corrección, anulación y reactivación con motivo y control de versión.    | Pendiente; el PoC registra auditoría de creación.                                                |
+| RF11      | Autorización en el servidor según el rol vigente.                        | Implementada para sesión y usuarios; aplicada también a animales; extensión a ordeños pendiente. |
+| RF12      | Salidas del rebaño conservando el historial.                             | Pendiente.                                                                                       |
+| RF13      | Alertas internas por disminución de producción y umbral configurable.    | Pendiente.                                                                                       |
 
 ### Ampliaciones y exclusiones
 
@@ -79,11 +79,11 @@ Quedan fuera de esta entrega sensores, funcionamiento sin conexión, múltiples 
 
 Estos permisos describen el objetivo del MVP. La API versionada de usuarios exige Administrador; las rutas antiguas del PoC conservan su alcance experimental.
 
-| Rol | Permisos previstos |
-|---|---|
+| Rol           | Permisos previstos                                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Administrador | Gestionar cuentas, animales, estados y salidas; registrar y corregir ordeños; configurar umbrales y consultar auditoría. |
-| Operario | Registrar ordeños y consultar información. |
-| Propietario | Consultar información, reportes e indicadores. |
+| Operario      | Registrar ordeños y consultar información.                                                                               |
+| Propietario   | Consultar información, reportes e indicadores.                                                                           |
 
 La API debe verificar permisos en cada operación. La sesión se invalidará al cerrar sesión, desactivar la cuenta o superar 30 minutos de inactividad.
 
@@ -113,14 +113,14 @@ Se prevé una alerta por animal y fecha si la disminución alcanza el umbral. Lo
 
 El diseño propone una aplicación cliente-servidor con API REST y persistencia en el servidor.
 
-| Componente | Tecnología | Situación |
-|---|---|---|
-| Interfaz | HTML, Tailwind CSS y JavaScript con Vite | Rediseño adaptable; sesión, usuarios, registro y cambios de estado integrados. |
-| API | Python y FastAPI | Sesión y usuarios en /api/v1, más rutas del PoC. |
-| Validación | Pydantic y servicios de negocio | Implementación parcial. |
-| Persistencia | SQLAlchemy y SQLite | Usuarios, sesiones, auditoría y datos del PoC. |
-| Servidor local | Uvicorn | Disponible mediante las dependencias. |
-| Pruebas | pytest, httpx, Node y Playwright | Backend, validaciones del cliente y flujos de navegador. |
+| Componente     | Tecnología                               | Situación                                                                      |
+| -------------- | ---------------------------------------- | ------------------------------------------------------------------------------ |
+| Interfaz       | HTML, Tailwind CSS y JavaScript con Vite | Rediseño adaptable; sesión, usuarios, registro y cambios de estado integrados. |
+| API            | Python y FastAPI                         | Sesión y usuarios en /api/v1, más rutas del PoC.                               |
+| Validación     | Pydantic y servicios de negocio          | Implementación parcial.                                                        |
+| Persistencia   | SQLAlchemy y SQLite                      | Usuarios, sesiones, auditoría y datos del PoC.                                 |
+| Servidor local | Uvicorn                                  | Disponible mediante las dependencias.                                          |
+| Pruebas        | pytest, httpx, Node y Playwright         | Backend, validaciones del cliente y flujos de navegador.                       |
 
 La arquitectura objetivo separa rutas y esquemas, servicios de negocio y repositorios. Actualmente los servicios acceden a SQLAlchemy directamente; la capa de repositorios es trabajo pendiente.
 
@@ -134,37 +134,114 @@ SQLite utiliza claves foráneas, WAL y espera acotada ante bloqueos. PostgreSQL 
 .
 ├── app/
 │   ├── __init__.py
-│   ├── database.py       # SQLite, PRAGMA y sesiones
-│   ├── main.py           # API versionada y rutas del PoC
-│   ├── rutas_auth.py     # Login, logout, CSRF y sesión
-│   ├── rutas_usuarios.py # Administración de cuentas
-│   ├── seguridad.py     # Contraseñas, CSRF y límites de acceso
-│   ├── models.py         # Usuarios, sesiones, animales, ordeños y auditoría
-│   └── service.py        # Validaciones y transacción de ordeño/auditoría
-├── frontend/            # Vite, HTML, Tailwind CSS y JavaScript
-│   ├── src/views.js     # Pantallas y formularios
-│   ├── src/styles.css   # Diseño adaptable
-│   ├── src/api.js       # Cliente de /api/v1
-│   ├── src/assets/      # Paisaje e iconos locales
-│   └── tests/           # Pruebas unitarias y de navegador
+│   ├── main.py                        # Composición: crea FastAPI, errores, routers y arranque
+│   ├── api/                           # Capa HTTP (no contiene reglas de negocio)
+│   │   ├── cookies.py                 # Cookies de sesión y CSRF
+│   │   ├── manejadores_errores.py     # Formato de error {"error": {code, message, fields}}
+│   │   ├── dependencias/
+│   │   │   ├── autorizacion.py        # Sesión requerida y permisos por rol
+│   │   │   ├── unidad_de_trabajo.py   # Raíz de composición: elige la persistencia (get_uow)
+│   │   │   └── verificacion_csrf.py   # Origen de la solicitud y token CSRF
+│   │   ├── v1/                        # API versionada /api/v1
+│   │   │   ├── router.py              # Agrupa los routers bajo /api/v1
+│   │   │   ├── auth.py                # Login, logout, CSRF y sesión
+│   │   │   ├── usuarios.py            # Administración de cuentas
+│   │   │   ├── animales.py            # Animales y cambios de estado
+│   │   │   └── auditoria.py           # Consulta de auditoría
+│   │   └── poc/                       # Rutas antiguas del PoC (sin versionar)
+│   │       ├── animales.py            # POST /animales
+│   │       └── ordenos.py             # POST /ordenos
+│   ├── services/                      # Reglas de negocio (no conocen HTTP)
+│   │   ├── puertos.py                 # Interfaces de persistencia que necesitan los servicios
+│   │   ├── auth.py                    # Abrir, validar y revocar sesiones
+│   │   ├── auditoria.py               # Registro y consulta de auditoría
+│   │   ├── ordenos.py                 # Registro de ordeños
+│   │   ├── animales_poc.py            # Alta de animales de las rutas del PoC
+│   │   ├── usuarios/
+│   │   │   ├── comandos.py            # Crear y actualizar cuentas (+ auditoría, correo único)
+│   │   │   ├── consultas.py           # Listado paginado y consulta por id
+│   │   │   └── validaciones.py        # Validación y normalización de datos
+│   │   └── animales/
+│   │       ├── comandos.py            # Alta y cambio de estado
+│   │       ├── consultas.py           # Listado e historial de estados
+│   │       ├── fechas.py              # Fecha de negocio de la finca
+│   │       ├── serializadores.py      # Representación pública y snapshots
+│   │       └── validaciones.py        # Reglas del alta de un animal
+│   ├── repositories/                  # Persistencia con SQLAlchemy (implementa los puertos)
+│   │   ├── unidad_de_trabajo.py       # Una transacción compartida por todos los repositorios
+│   │   ├── traduccion_errores.py      # Errores del driver -> excepciones de dominio
+│   │   ├── usuarios.py
+│   │   ├── sesiones.py
+│   │   ├── animales.py
+│   │   ├── estados.py
+│   │   ├── ordenos.py
+│   │   └── auditoria.py
+│   ├── schemas/                       # Contratos de entrada/salida (Pydantic)
+│   │   ├── auth.py
+│   │   ├── usuarios.py
+│   │   ├── animales.py
+│   │   └── poc.py
+│   ├── models/                        # Modelos de datos SQLAlchemy
+│   │   ├── base.py
+│   │   ├── usuario.py
+│   │   ├── sesion.py
+│   │   ├── animal.py
+│   │   ├── estado_animal.py
+│   │   ├── ordeno.py
+│   │   └── auditoria.py
+│   ├── db/                            # Acceso a datos
+│   │   ├── database.py                # Engine SQLite, PRAGMA y fábrica de sesiones
+│   │   ├── session.py                 # Engine global y get_session
+│   │   ├── inicializacion.py          # Migración, tablas y triggers al arrancar
+│   │   ├── migraciones.py             # Migración del esquema de `animal`
+│   │   ├── triggers.py                # Auditoría e historial inmutables
+│   │   └── respaldo.py                # Respaldo y restauración
+│   ├── core/                          # Núcleo transversal (no depende de otras capas)
+│   │   ├── excepciones.py             # ErrorApi, ErrorIntegridad, BaseDeDatosOcupada
+│   │   ├── reloj.py
+│   │   └── seguridad/                 # Contraseñas, tokens, CSRF y límite de intentos
+│   │       ├── constantes.py
+│   │       ├── contrasenas.py
+│   │       ├── tokens.py
+│   │       ├── csrf.py
+│   │       └── limitador.py
+│   └── cli/                           # Comandos: python -m app.cli.<comando>
+│       ├── crear_admin.py             # Crea el primer administrador
+│       └── respaldo.py                # Respaldo y restauración desde consola
+├── frontend/                          # Vite, HTML, Tailwind CSS y JavaScript
+│   ├── src/views.js                   # Pantallas y formularios
+│   ├── src/styles.css                 # Diseño adaptable
+│   ├── src/api.js                     # Cliente de /api/v1
+│   ├── src/assets/                    # Paisaje e iconos locales
+│   └── tests/                         # Pruebas unitarias y de navegador
 ├── docs/
 │   ├── contrato-api-sprint1.md
 │   ├── backend-acceso.md
-│   ├── assets/planteamiento-y-diseno/  # Diagramas y mockups
+│   ├── assets/planteamiento-y-diseno/ # Diagramas y mockups
 │   ├── POC.md
 │   ├── planteamiento-y-diseno.md
 │   ├── planteamiento-y-diseno.docx
 │   ├── product-backlog.md
 │   └── product-backlog.docx
+├── scripts/
+│   └── demo_sprint1.py                # Demostración reproducible del Sprint 1
 ├── tests/
 │   ├── __init__.py
+│   ├── conftest.py                    # BD temporal, un usuario por rol, reloj y cliente HTTPS
+│   ├── memoria.py                     # Unidad de trabajo en memoria (servicios sin BD)
 │   ├── test_poc.py
 │   ├── test_auth.py
 │   ├── test_seguridad.py
-│   └── test_usuarios.py
+│   ├── test_usuarios.py
+│   ├── test_animales.py
+│   ├── test_integridad.py
+│   ├── test_migraciones.py
+│   └── test_servicios_sin_bd.py
+├── DESIGN.md                          # Sistema visual
+├── PRODUCT.md
 ├── .gitignore
 ├── pytest.ini
-├── requirements.txt     # Dependencias fijadas
+├── requirements.txt                   # Dependencias fijadas
 └── README.md
 ```
 
@@ -242,33 +319,33 @@ La configuración es específica de SQLite; cambiar la URL no implementa por sí
 
 ## API disponible
 
-| Método | Ruta | Uso |
-|---|---|---|
-| GET | /api/v1/auth/csrf | Obtener token CSRF para escrituras. |
-| GET | /api/v1/auth/session | Consultar el usuario de la sesión vigente. |
-| POST | /api/v1/auth/login | Iniciar sesión mediante cookie. |
-| POST | /api/v1/auth/logout | Revocar sesión y borrar cookie. |
-| GET | /api/v1/usuarios | Lista paginada y búsqueda (Administrador). |
-| GET | /api/v1/usuarios/{id} | Consultar una cuenta (Administrador). |
-| POST | /api/v1/usuarios | Crear una cuenta (Administrador). |
-| PATCH | /api/v1/usuarios/{id} | Editar datos, rol o estado activo (Administrador). |
-| GET | /api/v1/animales | Lista paginada con búsqueda y estado efectivo. |
-| POST | /api/v1/animales | Registro completo (Administrador). |
-| GET | /api/v1/animales/{id} | Consultar animal. |
-| GET | /api/v1/animales/{id}/estados | Historial paginado. |
-| POST | /api/v1/animales/{id}/estados | Cambiar estado con fecha, motivo y versión (Administrador). |
-| GET | /api/v1/auditoria | Consultar auditoría (Administrador). |
-| POST | /animales | Crear un animal con arete y nombre opcional. |
-| POST | /ordenos | Registrar un ordeño y su auditoría. |
-| GET | /docs | Documentación interactiva. |
-| GET | /openapi.json | Esquema OpenAPI. |
+| Método | Ruta                          | Uso                                                         |
+| ------ | ----------------------------- | ----------------------------------------------------------- |
+| GET    | /api/v1/auth/csrf             | Obtener token CSRF para escrituras.                         |
+| GET    | /api/v1/auth/session          | Consultar el usuario de la sesión vigente.                  |
+| POST   | /api/v1/auth/login            | Iniciar sesión mediante cookie.                             |
+| POST   | /api/v1/auth/logout           | Revocar sesión y borrar cookie.                             |
+| GET    | /api/v1/usuarios              | Lista paginada y búsqueda (Administrador).                  |
+| GET    | /api/v1/usuarios/{id}         | Consultar una cuenta (Administrador).                       |
+| POST   | /api/v1/usuarios              | Crear una cuenta (Administrador).                           |
+| PATCH  | /api/v1/usuarios/{id}         | Editar datos, rol o estado activo (Administrador).          |
+| GET    | /api/v1/animales              | Lista paginada con búsqueda y estado efectivo.              |
+| POST   | /api/v1/animales              | Registro completo (Administrador).                          |
+| GET    | /api/v1/animales/{id}         | Consultar animal.                                           |
+| GET    | /api/v1/animales/{id}/estados | Historial paginado.                                         |
+| POST   | /api/v1/animales/{id}/estados | Cambiar estado con fecha, motivo y versión (Administrador). |
+| GET    | /api/v1/auditoria             | Consultar auditoría (Administrador).                        |
+| POST   | /animales                     | Crear un animal con arete y nombre opcional.                |
+| POST   | /ordenos                      | Registrar un ordeño y su auditoría.                         |
+| GET    | /docs                         | Documentación interactiva.                                  |
+| GET    | /openapi.json                 | Esquema OpenAPI.                                            |
 
 Las escrituras versionadas requieren `X-CSRF-Token`; el frontend lo obtiene antes de cada envío. El [contrato](docs/contrato-api-sprint1.md) detalla entradas, respuestas y errores.
 
 Para probar las rutas antiguas del PoC en Swagger UI, ejecutar primero `POST /animales`:
 
 ```json
-{"arete": "V-001", "nombre": "Luna"}
+{ "arete": "V-001", "nombre": "Luna" }
 ```
 
 Copiar el `id` devuelto y usarlo en `POST /ordenos`, con la cabecera `X-Usuario: operario01`:
@@ -288,13 +365,13 @@ La respuesta válida es `201`, con producción, descarte y disponibilidad. Repet
 
 **X-Usuario es un sustituto de sesión para el PoC, controlado por el cliente.** No demuestra autenticación ni autorización y debe reemplazarse por identidad autenticada en el MVP.
 
-| Código | Significado |
-|---|---|
-| 201 | Registro creado. |
-| 404 | Animal inexistente al registrar un ordeño. |
-| 409 | Arete o clave de ordeño duplicados. |
-| 422 | Entrada inválida, cantidad fuera de rango o cabecera requerida ausente. |
-| 503 | Bloqueo de SQLite que persiste tras la espera acotada al registrar ordeños. |
+| Código | Significado                                                                 |
+| ------ | --------------------------------------------------------------------------- |
+| 201    | Registro creado.                                                            |
+| 404    | Animal inexistente al registrar un ordeño.                                  |
+| 409    | Arete o clave de ordeño duplicados.                                         |
+| 422    | Entrada inválida, cantidad fuera de rango o cabecera requerida ausente.     |
+| 503    | Bloqueo de SQLite que persiste tras la espera acotada al registrar ordeños. |
 
 ## Pruebas
 
@@ -338,12 +415,12 @@ La revisión integrada mediante el PR #1 obtuvo **23 pruebas aprobadas**. Verifi
 
 El backlog agrupa 22 elementos en seis épicas: acceso y usuarios, gestión del ganado, producción de leche, reportes e indicadores, alertas y calidad técnica.
 
-| Sprint propuesto | Objetivo |
-|---|---|
-| 1 | Acceso, usuarios, animales y base de seguridad e integridad. |
-| 2 | Ordeños, estados/salidas, correcciones e historial. |
-| 3 | Consultas, comparaciones, indicadores, reportes y alertas. |
-| 4 | Integración, rendimiento, validación y despliegue. |
+| Sprint propuesto | Objetivo                                                     |
+| ---------------- | ------------------------------------------------------------ |
+| 1                | Acceso, usuarios, animales y base de seguridad e integridad. |
+| 2                | Ordeños, estados/salidas, correcciones e historial.          |
+| 3                | Consultas, comparaciones, indicadores, reportes y alertas.   |
+| 4                | Integración, rendimiento, validación y despliegue.           |
 
 Se proponen ciclos de dos semanas, sujetos al calendario académico y la capacidad real del equipo. Los puntos de historia son estimaciones iniciales, no horas ni compromisos confirmados. Seguridad y pruebas se trabajan desde el inicio.
 

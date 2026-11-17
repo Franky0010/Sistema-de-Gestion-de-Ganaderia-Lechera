@@ -5,8 +5,8 @@ import pytest
 from sqlalchemy import inspect, text
 from sqlalchemy.exc import IntegrityError
 
-from app import migraciones
-from app.database import crear_engine
+from app.db import migraciones
+from app.db.database import crear_engine
 from app.models import Base
 
 ESQUEMA_VIEJO = """
